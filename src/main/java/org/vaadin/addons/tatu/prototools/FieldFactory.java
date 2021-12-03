@@ -1,6 +1,5 @@
 package org.vaadin.addons.tatu.prototools;
 
-import java.lang.reflect.TypeVariable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -52,8 +51,8 @@ public class FieldFactory {
             ComboBox<String> comp = createEnumCombo(property);
             component = comp;
         } else {
-//            throw new IllegalStateException("Property type not supported: "
-//                    + propertyType.getTypeName());
+            // throw new IllegalStateException("Property type not supported: "
+            // + propertyType.getTypeName());
             component = null;
         }
         return component;

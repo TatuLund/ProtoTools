@@ -11,20 +11,20 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 
 @Tag(Tag.DIV)
-public class PopupForm<T> extends AbstractField<PopupForm<T>, T> implements HasSize, HasValidation {
+public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
+        implements HasSize, HasValidation {
 
     Dialog dialog = new Dialog();
     Button button = new Button();
     Form<T> form;
-	private String text = "";
+    private String text = "";
+    private boolean invalid;
 
-    public PopupForm(Class<T> beanType,
-            ValueProvider<Void, T> beanProvider) {
+    public PopupForm(Class<T> beanType, ValueProvider<Void, T> beanProvider) {
         this(null, beanType, true);
     }
 
-    public PopupForm(Class<T> beanType,
-            boolean autoBuild) {
+    public PopupForm(Class<T> beanType, boolean autoBuild) {
         this(null, beanType, autoBuild);
     }
 
@@ -40,7 +40,7 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T> implements HasS
         button.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         form.addValueChangeListener(event -> {
-           doSetInternalValue(); 
+            doSetInternalValue();
         });
         getElement().appendChild(button.getElement());
     }
@@ -59,7 +59,7 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T> implements HasS
     }
 
     public void setLabel(String text) {
-    	this.text = text;
+        this.text = text;
         button.setText(text);
         button.setIcon(VaadinIcon.EDIT.create());
     }
@@ -70,32 +70,27 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T> implements HasS
 
     @Override
     public void setErrorMessage(String errorMessage) {
-        // TODO Auto-generated method stub
-        
+        button.getElement().setAttribute("title", errorMessage);
     }
 
     @Override
     public String getErrorMessage() {
-        // TODO Auto-generated method stub
-        return null;
+        return button.getElement().getAttribute("title");
     }
 
     @Override
     public void setInvalid(boolean invalid) {
-        // TODO Auto-generated method stub
-        
+        this.invalid = true;
     }
 
     @Override
     public boolean isInvalid() {
-        // TODO Auto-generated method stub
-        return false;
+        return invalid;
     }
 
     @Override
     protected void setPresentationValue(T newPresentationValue) {
-        // TODO Auto-generated method stub
-        
+        form.setValue(newPresentationValue);
     }
 
 }

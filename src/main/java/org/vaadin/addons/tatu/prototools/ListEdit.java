@@ -9,6 +9,7 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -24,6 +25,8 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     private ValueProvider<Void, T> beanProvider;
     private Class<T> beanType;;
     private boolean hasChanges;
+    private Column<T> deleteColumn;
+    private boolean readOnly;
 
     public ListEdit(Class<T> beanType, ValueProvider<Void, T> beanProvider) {
         this(new ArrayList<T>(), beanType, beanProvider, true);
@@ -51,6 +54,8 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
 
         addButton = VaadinIcon.PLUS.create();
         addButton.addClickListener(event -> {
+            if (readOnly)
+                return;
             hasChanges = false;
             T newItem = this.beanProvider.apply(null);
             dataView.addItem(newItem);
@@ -77,9 +82,11 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     }
 
     private void addDeleteColumn() {
-        grid.addComponentColumn(item -> {
+        deleteColumn = grid.addComponentColumn(item -> {
             Icon deleteButton = VaadinIcon.TRASH.create();
             deleteButton.addClickListener(event -> {
+                if (readOnly)
+                    return;
                 dataView.removeItem(item);
                 doSetInternalValue();
             });
@@ -113,6 +120,35 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         });
     }
 
+    public void addListColumn(String property, Class listBeanType,
+            ValueProvider listBeanProvider) {
+        grid.removeColumn(deleteColumn);
+        grid.addListColumn(property, listBeanType, listBeanProvider, true,
+                null);
+        addDeleteColumn();
+    }
+
+    public void addListColumn(String property, Class listBeanType,
+            ValueProvider listBeanProvider, String... listProperties) {
+        grid.removeColumn(deleteColumn);
+        grid.addListColumn(property, listBeanType, listBeanProvider, false,
+                listProperties);
+        addDeleteColumn();
+    }
+
+    public void addBeanColumn(String property, Class listBeanType) {
+        grid.removeColumn(deleteColumn);
+        grid.addBeanColumn(property, listBeanType, true, null);
+        addDeleteColumn();
+    }
+
+    public void addBeanColumn(String property, Class listBeanType,
+            String... listProperties) {
+        grid.removeColumn(deleteColumn);
+        grid.addBeanColumn(property, listBeanType, false, listProperties);
+        addDeleteColumn();
+    }
+
     @Override
     protected void setPresentationValue(List<T> newPresentationValue) {
         dataView = grid.setItems(newPresentationValue);
@@ -121,7 +157,6 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     @Override
     public void setErrorMessage(String errorMessage) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -133,7 +168,6 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     @Override
     public void setInvalid(boolean invalid) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -142,4 +176,10 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         return false;
     }
 
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
+        grid.setEnabled(!readOnly);
+        super.setReadOnly(readOnly);
+    }
 }

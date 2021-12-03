@@ -26,7 +26,8 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
     Dialog dialog = new Dialog();
     Button button = new Button();
     ListEdit<T> listEdit;
-	private String text = "";
+    private String text = "";
+    private boolean invalid;
 
     public PopupListEdit(Class<T> beanType,
             ValueProvider<Void, T> beanProvider) {
@@ -45,7 +46,7 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
                 autoBuild);
         dialog.add(listEdit);
         dialog.setResizable(false);
-        button.setText("("+defaultValue.size()+")");
+        button.setText("(" + defaultValue.size() + ")");
         button.setIcon(VaadinIcon.EDIT.create());
         button.addClickListener(event -> {
             dialog.open();
@@ -53,7 +54,7 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
         button.addThemeVariants(ButtonVariant.LUMO_SMALL);
 
         listEdit.addValueChangeListener(event -> {
-           doSetInternalValue(); 
+            doSetInternalValue();
         });
         getElement().appendChild(button.getElement());
     }
@@ -67,13 +68,13 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
 
     private ComponentValueChangeEvent<PopupListEdit<T>, List<T>> createValueChange(
             List<T> oldValue, boolean fromClient) {
-        return new ComponentValueChangeEvent<PopupListEdit<T>, List<T>>(this, this,
-                oldValue, fromClient);
+        return new ComponentValueChangeEvent<PopupListEdit<T>, List<T>>(this,
+                this, oldValue, fromClient);
     }
 
     public void setLabel(String text) {
-    	this.text = text;
-        button.setText(text+" ("+getValue().size()+")");
+        this.text = text;
+        button.setText(text + " (" + getValue().size() + ")");
         button.setIcon(VaadinIcon.EDIT.create());
     }
 
@@ -83,26 +84,22 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
 
     @Override
     public void setErrorMessage(String errorMessage) {
-        // TODO Auto-generated method stub
-        
+        button.getElement().setAttribute("title", errorMessage);
     }
 
     @Override
     public String getErrorMessage() {
-        // TODO Auto-generated method stub
-        return null;
+        return button.getElement().getAttribute("title");
     }
 
     @Override
     public void setInvalid(boolean invalid) {
-        // TODO Auto-generated method stub
-        
+        this.invalid = true;
     }
 
     @Override
     public boolean isInvalid() {
-        // TODO Auto-generated method stub
-        return false;
+        return invalid;
     }
 
     @Override

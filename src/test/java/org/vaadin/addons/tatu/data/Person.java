@@ -24,17 +24,18 @@ public class Person extends AbstractEntity {
     @NotNull(message = "Gender is mandatory to fill")
     private Gender gender;
     private List<Car> cars;
-    private License license = new License();
-    
+    private License license;
+
     public Person() {
         firstName = "John";
         lastName = "Doe";
         weight = 70;
-//        dateOfBirth = LocalDate.now().minusYears(25);
+        // dateOfBirth = LocalDate.now().minusYears(25);
         dateOfBirth = new Date();
         cars = new ArrayList<>();
-        cars.add(new Car("Ford","Mondeo"));
-        cars.add(new Car("Toyota","Yaris"));
+        cars.add(new Car("Ford", "Mondeo"));
+        cars.add(new Car("Toyota", "Yaris"));
+        license = new License();
     }
 
     public String getFirstName() {
@@ -93,13 +94,12 @@ public class Person extends AbstractEntity {
         this.cars = cars;
     }
 
-	public License getLicense() {
-		return license;
-	}
+    public License getLicense() {
+        return license;
+    }
 
-	public void setLicense(License license) {
-		this.license = license;
-	}
+    public void setLicense(License license) {
+        this.license = license;
+    }
 
 }
-

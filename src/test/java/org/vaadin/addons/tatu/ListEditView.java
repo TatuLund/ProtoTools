@@ -2,12 +2,9 @@ package org.vaadin.addons.tatu;
 
 import java.util.List;
 
-import javax.validation.constraints.Size;
-
 import org.vaadin.addons.tatu.data.Car;
+import org.vaadin.addons.tatu.data.License;
 import org.vaadin.addons.tatu.data.Person;
-import org.vaadin.addons.tatu.prototools.Form;
-import org.vaadin.addons.tatu.prototools.AutoGrid;
 import org.vaadin.addons.tatu.prototools.ListEdit;
 
 import com.vaadin.flow.component.button.Button;
@@ -26,14 +23,20 @@ public class ListEditView extends Div {
     private Binder<PersonRoster> binder = new Binder<>();
 
     public ListEditView() {
-        ListEdit<Person> gridField = new ListEdit<Person>(Person.class, Void -> new Person());
-        gridField.setColumns("firstName","lastName","gender","weight","email","dateOfBirth");
-        binder.forField(gridField).bind(PersonRoster::getPersons,
+        ListEdit<Person> listEdit = new ListEdit<Person>(Person.class,
+                Void -> new Person());
+        listEdit.setColumns("firstName", "lastName", "gender", "weight",
+                "email", "dateOfBirth");
+        listEdit.addListColumn("cars", Car.class,
+                Void -> new Car("Kia", "Ceed"), "brand", "model");
+        listEdit.addBeanColumn("license", License.class, "license", "licensor");
+        binder.forField(listEdit).bind(PersonRoster::getPersons,
                 PersonRoster::setPersons);
         binder.setBean(personRoster);
-        gridField.setWidth("100%");
-        gridField.addValueChangeListener(event -> {
-            Notification.show("Items " + gridField.getValue().size() + " bound items " + personRoster.getPersons().size());
+        listEdit.setWidth("100%");
+        listEdit.addValueChangeListener(event -> {
+            Notification.show("Items " + listEdit.getValue().size()
+                    + " bound items " + personRoster.getPersons().size());
         });
 
         Button button = new Button(VaadinIcon.TABLE.create());
@@ -45,8 +48,12 @@ public class ListEditView extends Div {
             dialog.add(grid);
             dialog.open();
         });
-        
-        add(gridField, button);
+
+        Button readOnly = new Button(VaadinIcon.STOP.create());
+        readOnly.addClickListener(event -> {
+            listEdit.setReadOnly(!listEdit.isReadOnly());
+        });
+        add(listEdit, button, readOnly);
     }
 
     public class PersonRoster {
@@ -60,7 +67,5 @@ public class ListEditView extends Div {
             return persons;
         }
     }
-    
-
 
 }

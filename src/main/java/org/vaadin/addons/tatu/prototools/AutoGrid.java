@@ -2,6 +2,7 @@ package org.vaadin.addons.tatu.prototools;
 
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
@@ -12,7 +13,6 @@ import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.data.binder.BeanPropertySet;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
@@ -59,7 +59,7 @@ public class AutoGrid<T> extends Grid<T> {
 
         binder = new BeanValidationBinder<>(beanType);
         getEditor().setBinder(binder);
-        
+
         if (autoBuild) {
             configureColumns(beanType);
         }
@@ -94,41 +94,59 @@ public class AutoGrid<T> extends Grid<T> {
         getEditor().setBinder(binder);
     }
 
-    public void addListColumn(String property, Class listBeanType, ValueProvider listBeanProvider) {
-    	this.addListColumn(property, listBeanType, listBeanProvider, true, null);
-    }
- 
-    public void addListColumn(String property, Class listBeanType, ValueProvider listBeanProvider, String... listProperties) {
-    	this.addListColumn(property, listBeanType, listBeanProvider, false, listProperties);
+    public void addListColumn(String property, Class listBeanType,
+            ValueProvider listBeanProvider) {
+        this.addListColumn(property, listBeanType, listBeanProvider, true,
+                null);
     }
 
-    protected void addListColumn(String property, Class listBeanType, ValueProvider listBeanProvider, boolean autoCreate, String... listProperties) {
+    public void addListColumn(String property, Class listBeanType,
+            ValueProvider listBeanProvider, String... listProperties) {
+        this.addListColumn(property, listBeanType, listBeanProvider, false,
+                listProperties);
+    }
+
+    protected void addListColumn(String property, Class listBeanType,
+            ValueProvider listBeanProvider, boolean autoCreate,
+            String... listProperties) {
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         propertySet.getProperty(property).ifPresent(prop -> {
-        	addColumn(property);
-        	PopupListEdit<?> listEdit = new PopupListEdit<>(listBeanType, listBeanProvider, autoCreate);
-        	if (listProperties !=null) listEdit.setColumns(listProperties);
-            configureComponent(prop, listEdit);
-        	listEdit.setLabel(prop.getName());
+            String name = Utils.formatName(property);
+            PopupListEdit<?> listEdit = new PopupListEdit<>(listBeanType,
+                    listBeanProvider, autoCreate);
+            addColumn(item -> {
+                List<?> list = (List<?>) prop.getGetter().apply(item);
+                String text = name + " (" + list.size() + ")";
+                return text;
+            }).setHeader(name).setEditorComponent(listEdit);
+            if (listProperties != null)
+                listEdit.setColumns(listProperties);
+            binder.forField(listEdit).withValidationStatusHandler(
+                    handler -> validationStatusHandler(handler, listEdit))
+                    .bind(property);
+            listEdit.setLabel(name);
         });
     }
 
     public void addBeanColumn(String property, Class listBeanType) {
-    	this.addBeanColumn(property, listBeanType, true, null);
-    }
- 
-    public void addBeanColumn(String property, Class listBeanType, String... listProperties) {
-    	this.addBeanColumn(property, listBeanType, false, listProperties);
+        this.addBeanColumn(property, listBeanType, true, null);
     }
 
-    protected void addBeanColumn(String property, Class beanBeanType, boolean autoCreate, String... beanProperties) {
+    public void addBeanColumn(String property, Class listBeanType,
+            String... listProperties) {
+        this.addBeanColumn(property, listBeanType, false, listProperties);
+    }
+
+    protected void addBeanColumn(String property, Class beanBeanType,
+            boolean autoCreate, String... beanProperties) {
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         propertySet.getProperty(property).ifPresent(prop -> {
-        	addColumn(property);
-        	PopupForm<?> form = new PopupForm<>(beanBeanType, autoCreate);
-        	if (beanProperties !=null) form.setColumns(beanProperties);
+            addColumn(property);
+            PopupForm<?> form = new PopupForm<>(beanBeanType, autoCreate);
+            if (beanProperties != null)
+                form.setColumns(beanProperties);
             configureComponent(prop, form);
-        	form.setLabel(prop.getName());
+            form.setLabel(prop.getName());
         });
     }
 

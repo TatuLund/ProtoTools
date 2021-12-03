@@ -65,10 +65,10 @@ public class Form<T> extends AbstractField<Form<T>, T>
         });
     }
 
-    private ComponentValueChangeEvent<Form<T>, T> createValueChange(
-            T oldValue, boolean fromClient) {
-        return new ComponentValueChangeEvent<Form<T>, T>(this, this,
-                oldValue, fromClient);
+    private ComponentValueChangeEvent<Form<T>, T> createValueChange(T oldValue,
+            boolean fromClient) {
+        return new ComponentValueChangeEvent<Form<T>, T>(this, this, oldValue,
+                fromClient);
     }
 
     public void setProperties(String... properties) {
@@ -86,39 +86,50 @@ public class Form<T> extends AbstractField<Form<T>, T>
         binder.setBean(bean);
     }
 
-    public void addListProperty(String property, Class listBeanType, ValueProvider listBeanProvider) {
-    	this.addListProperty(property, listBeanType, listBeanProvider, true, null);
-    }
- 
-    public void addListProperty(String property, Class listBeanType, ValueProvider listBeanProvider, String... listProperties) {
-    	this.addListProperty(property, listBeanType, listBeanProvider, false, listProperties);
+    public void addListProperty(String property, Class listBeanType,
+            ValueProvider listBeanProvider) {
+        this.addListProperty(property, listBeanType, listBeanProvider, true,
+                null);
     }
 
-    protected void addListProperty(String property, Class listBeanType, ValueProvider listBeanProvider, boolean autoCreate, String... listProperties) {
+    public void addListProperty(String property, Class listBeanType,
+            ValueProvider listBeanProvider, String... listProperties) {
+        this.addListProperty(property, listBeanType, listBeanProvider, false,
+                listProperties);
+    }
+
+    protected void addListProperty(String property, Class listBeanType,
+            ValueProvider listBeanProvider, boolean autoCreate,
+            String... listProperties) {
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         propertySet.getProperty(property).ifPresent(prop -> {
-        	PopupListEdit<?> listEdit = new PopupListEdit<>(listBeanType, listBeanProvider, autoCreate);
-        	if (listProperties !=null) listEdit.setColumns(listProperties);
+            PopupListEdit<?> listEdit = new PopupListEdit<>(listBeanType,
+                    listBeanProvider, autoCreate);
+            if (listProperties != null)
+                listEdit.setColumns(listProperties);
             configureComponent(prop, listEdit);
-        	listEdit.setLabel(prop.getName());
+            listEdit.setLabel(prop.getName());
         });
     }
 
     public void addBeanProperty(String property, Class listBeanType) {
-    	this.addBeanProperty(property, listBeanType, true, null);
-    }
- 
-    public void addBeanProperty(String property, Class listBeanType, String... listProperties) {
-    	this.addBeanProperty(property, listBeanType, false, listProperties);
+        this.addBeanProperty(property, listBeanType, true, null);
     }
 
-    protected void addBeanProperty(String property, Class beanBeanType, boolean autoCreate, String... beanProperties) {
+    public void addBeanProperty(String property, Class listBeanType,
+            String... listProperties) {
+        this.addBeanProperty(property, listBeanType, false, listProperties);
+    }
+
+    protected void addBeanProperty(String property, Class beanBeanType,
+            boolean autoCreate, String... beanProperties) {
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         propertySet.getProperty(property).ifPresent(prop -> {
-        	PopupForm<?> form = new PopupForm<>(beanBeanType, autoCreate);
-        	if (beanProperties !=null) form.setColumns(beanProperties);
+            PopupForm<?> form = new PopupForm<>(beanBeanType, autoCreate);
+            if (beanProperties != null)
+                form.setColumns(beanProperties);
             configureComponent(prop, form);
-        	form.setLabel(prop.getName());
+            form.setLabel(prop.getName());
         });
     }
 
@@ -155,20 +166,9 @@ public class Form<T> extends AbstractField<Form<T>, T>
             }
         }
 
-        form.addFormItem(component, formatName(property.getName()));
+        form.addFormItem(component, Utils.formatName(property.getName()));
         component.getElement().getThemeList().add("small");
         component.getElement().getStyle().set("width", "100%");
-    }
-
-    private String formatName(String propertyName) {
-        if (propertyName == null || propertyName.isEmpty())
-            return "";
-        String name = propertyName.replaceAll(
-                String.format("%s|%s|%s", "(?<=[A-Z])(?=[A-Z][a-z])",
-                        "(?<=[^A-Z])(?=[A-Z])", "(?<=[A-Za-z])(?=[^A-Za-z])"),
-                " ");
-        name = name.substring(0, 1).toUpperCase() + name.substring(1);
-        return name;
     }
 
     @Override
