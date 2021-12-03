@@ -1,6 +1,30 @@
-# Paper Slider
+# Proto Tools
 
-Vaadin 14 Java integration of @polymer/paper-slider
+Vaadin 21 components for creating quick prototype applications
+
+### Form<T>
+
+Form that populates automatically based on the bean, using FieldFactory
+
+List or Bean properties can be added too (uses PopupListEdit or PopupForm)
+
+### ListEdit<T>
+
+List editor based on AutoGrid
+
+### AutoGrid<T>
+
+Grid with Editor auto generation
+
+List or Bean properties can be added too (uses PopupListEdit or PopupForm)
+
+### PopupListEdit<T>
+
+ListEdit in a Dialog
+
+### PopupForm<T>
+
+Form in a Dialog
 
 ## Development instructions
 
@@ -25,6 +49,6 @@ mvn versions:set -DnewVersion=1.0.0 # You cannot publish snapshot versions
 mvn install -Pdirectory
 ```
 
-The package is created as `target/paper-slider-1.0.0.zip`
+The package is created as `target/prototools-1.0.0.zip`
 
 For more information or to upload the package, visit https://vaadin.com/directory/my-components?uploadNewComponent
