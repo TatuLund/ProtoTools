@@ -7,12 +7,12 @@ import org.vaadin.addons.tatu.prototools.Form;
 
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("form")
+@PageTitle("Form")
+@Route(value = "form", layout = MainLayout.class)
 public class FormView extends Div {
-
-    public int indentiefier;
 
     public FormView() {
         Form<Person> autoForm = new Form<>(new Person(), Person.class, false);

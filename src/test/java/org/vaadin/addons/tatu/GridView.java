@@ -7,9 +7,11 @@ import org.vaadin.addons.tatu.data.Person;
 import org.vaadin.addons.tatu.prototools.AutoGrid;
 
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("grid")
+@PageTitle("Auto Grid")
+@Route(value = "grid", layout = MainLayout.class)
 public class GridView extends Div {
 
     public GridView() {

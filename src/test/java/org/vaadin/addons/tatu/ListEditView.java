@@ -14,9 +14,11 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
-@Route("listedit")
+@PageTitle("List Edit")
+@Route(value = "listedit", layout = MainLayout.class)
 public class ListEditView extends Div {
 
     private PersonRoster personRoster = new PersonRoster();
