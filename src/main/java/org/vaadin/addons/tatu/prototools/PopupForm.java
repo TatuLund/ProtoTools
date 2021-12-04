@@ -7,6 +7,9 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 
@@ -19,6 +22,7 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
     Form<T> form;
     private String text = "";
     private boolean invalid;
+    private H3 title;
 
     public PopupForm(Class<T> beanType, ValueProvider<Void, T> beanProvider) {
         this(null, beanType, true);
@@ -31,7 +35,16 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
     public PopupForm(T defaultValue, Class<T> beanType, boolean autoBuild) {
         super(defaultValue);
         form = new Form<>(defaultValue, beanType, autoBuild);
-        dialog.add(form);
+        Span span = new Span();
+        span.addClassNames("flex","flex-row","items-center","justify-between","p-s");
+        Icon close = VaadinIcon.CLOSE_SMALL.create();
+        close.addClickListener(event -> {
+           dialog.close(); 
+        });
+        title = new H3();
+        title.addClassNames("text-header","text-l","my-0");
+        span.add(close,title);        
+        dialog.add(span,form);
         dialog.setResizable(false);
         button.setIcon(VaadinIcon.EDIT.create());
         button.addClickListener(event -> {
@@ -62,6 +75,7 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
         this.text = text;
         button.setText(text);
         button.setIcon(VaadinIcon.EDIT.create());
+        title.setText(text);
     }
 
     public void setColumns(String... propertyNames) {
@@ -81,6 +95,11 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
     @Override
     public void setInvalid(boolean invalid) {
         this.invalid = true;
+        if (invalid) {
+            button.addClassNames("bg-error", "text-error-contrast");
+        } else {
+            button.removeClassNames("bg-error", "text-error-contrast");            
+        }
     }
 
     @Override

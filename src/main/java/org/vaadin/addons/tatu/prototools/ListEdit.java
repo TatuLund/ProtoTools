@@ -45,6 +45,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         this.beanProvider = beanProvider;
         this.beanType = beanType;
         grid = new AutoGrid<>(beanType, autoBuild);
+        grid.addClassNames("p-s","shadow-xs");
 
         dataView = grid.setItems(defaultValue);
 
@@ -55,6 +56,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         });
 
         addButton = VaadinIcon.PLUS.create();
+        addButton.addClassName("m-s");
         addButton.addClickListener(event -> {
             if (readOnly)
                 return;

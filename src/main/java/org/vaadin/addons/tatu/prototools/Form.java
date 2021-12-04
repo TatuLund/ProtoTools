@@ -45,6 +45,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
         this.bean = defaultValue;
         form = new EnhancedFormLayout();
         form.setStickyIndicator(true);
+        form.addClassNames("p-s","shadow-xs");
 
         if (autoBuild) {
             binder = new BeanValidationBinder<>(beanType);
@@ -112,7 +113,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
             if (listProperties != null)
                 listEdit.setColumns(listProperties);
             configureComponent(prop, listEdit);
-            listEdit.setLabel(prop.getName());
+            listEdit.setLabel(Utils.formatName(property));
         });
         setupValueChangeListener();
     }
@@ -135,7 +136,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
             if (beanProperties != null)
                 form.setColumns(beanProperties);
             configureComponent(prop, form);
-            form.setLabel(prop.getName());
+            form.setLabel(Utils.formatName(property));
         });
         setupValueChangeListener();
     }

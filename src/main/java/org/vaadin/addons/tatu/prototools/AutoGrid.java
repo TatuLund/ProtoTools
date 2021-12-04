@@ -146,7 +146,7 @@ public class AutoGrid<T> extends Grid<T> {
             if (beanProperties != null)
                 form.setColumns(beanProperties);
             configureComponent(prop, form);
-            form.setLabel(prop.getName());
+            form.setLabel(Utils.formatName(prop.getName()));
         });
     }
 
