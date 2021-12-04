@@ -22,6 +22,7 @@ import com.vaadin.flow.data.binder.PropertySet;
 import com.vaadin.flow.data.converter.LocalDateTimeToDateConverter;
 import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.shared.Registration;
 
 @Tag("div")
 public class Form<T> extends AbstractField<Form<T>, T>
@@ -31,6 +32,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
     private BeanValidationBinder<T> binder;
     private Class<T> beanType;
     private T bean;
+    private Registration valueChangeRegistration;
 
     public Form(T defaultValue, Class<T> beanType) {
         this(defaultValue, beanType, true);
@@ -57,7 +59,8 @@ public class Form<T> extends AbstractField<Form<T>, T>
     }
 
     private void setupValueChangeListener() {
-        binder.addValueChangeListener(event -> {
+        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        valueChangeRegistration = binder.addValueChangeListener(event -> {
             if (binder.isValid()) {
                 setModelValue(binder.getBean(), true);
                 fireEvent(createValueChange(binder.getBean(), true));
@@ -101,6 +104,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
     protected void addListProperty(String property, Class listBeanType,
             ValueProvider listBeanProvider, boolean autoCreate,
             String... listProperties) {
+        if (valueChangeRegistration != null) valueChangeRegistration.remove();
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         propertySet.getProperty(property).ifPresent(prop -> {
             PopupListEdit<?> listEdit = new PopupListEdit<>(listBeanType,
@@ -110,6 +114,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
             configureComponent(prop, listEdit);
             listEdit.setLabel(prop.getName());
         });
+        setupValueChangeListener();
     }
 
     public void addBeanProperty(String property, Class listBeanType) {
@@ -123,6 +128,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
 
     protected void addBeanProperty(String property, Class beanBeanType,
             boolean autoCreate, String... beanProperties) {
+        if (valueChangeRegistration != null) valueChangeRegistration.remove();
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         propertySet.getProperty(property).ifPresent(prop -> {
             PopupForm<?> form = new PopupForm<>(beanBeanType, autoCreate);
@@ -131,6 +137,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
             configureComponent(prop, form);
             form.setLabel(prop.getName());
         });
+        setupValueChangeListener();
     }
 
     private void populateForm(Class<T> beanType) {
@@ -147,6 +154,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
     private void configureComponent(PropertyDefinition<T, ?> property,
             Component component) {
 
+        if (component == null) return;
         if (component instanceof HasValue) {
             HasValue<?, ?> hasValue = (HasValue) component;
             if (property.getType().isEnum()) {

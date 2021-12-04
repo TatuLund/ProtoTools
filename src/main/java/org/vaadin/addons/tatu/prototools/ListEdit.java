@@ -14,6 +14,7 @@ import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.shared.Registration;
 
 @Tag("div")
 public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
@@ -27,6 +28,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     private boolean hasChanges;
     private Column<T> deleteColumn;
     private boolean readOnly;
+    private Registration valueChangeRegistration;
 
     public ListEdit(Class<T> beanType, ValueProvider<Void, T> beanProvider) {
         this(new ArrayList<T>(), beanType, beanProvider, true);
@@ -71,9 +73,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
             addDeleteColumn();
         }
 
-        grid.getBinder().addValueChangeListener(event -> {
-            hasChanges = true;
-        });
+        setupValueChangeListener();
 
         if (defaultValue != null) {
             setModelValue(defaultValue, false);
@@ -113,40 +113,53 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     }
 
     public void setColumns(String... propertyNames) {
+        if (valueChangeRegistration != null) valueChangeRegistration.remove();
         grid.setColumns(propertyNames);
         addDeleteColumn();
-        grid.getBinder().addValueChangeListener(event -> {
+        setupValueChangeListener();
+    }
+
+    private void setupValueChangeListener() {
+        valueChangeRegistration = grid.getBinder().addValueChangeListener(event -> {
             hasChanges = true;
         });
     }
 
     public void addListColumn(String property, Class listBeanType,
             ValueProvider listBeanProvider) {
+        if (valueChangeRegistration != null) valueChangeRegistration.remove();
         grid.removeColumn(deleteColumn);
         grid.addListColumn(property, listBeanType, listBeanProvider, true,
                 null);
         addDeleteColumn();
+        setupValueChangeListener();
     }
 
     public void addListColumn(String property, Class listBeanType,
             ValueProvider listBeanProvider, String... listProperties) {
+        if (valueChangeRegistration != null) valueChangeRegistration.remove();
         grid.removeColumn(deleteColumn);
         grid.addListColumn(property, listBeanType, listBeanProvider, false,
                 listProperties);
         addDeleteColumn();
+        setupValueChangeListener();
     }
 
     public void addBeanColumn(String property, Class listBeanType) {
+        if (valueChangeRegistration != null) valueChangeRegistration.remove();
         grid.removeColumn(deleteColumn);
         grid.addBeanColumn(property, listBeanType, true, null);
         addDeleteColumn();
+        setupValueChangeListener();
     }
 
     public void addBeanColumn(String property, Class listBeanType,
             String... listProperties) {
+        if (valueChangeRegistration != null) valueChangeRegistration.remove();
         grid.removeColumn(deleteColumn);
         grid.addBeanColumn(property, listBeanType, false, listProperties);
         addDeleteColumn();
+        setupValueChangeListener();
     }
 
     @Override
