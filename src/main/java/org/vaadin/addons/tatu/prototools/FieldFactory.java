@@ -45,6 +45,7 @@ public class FieldFactory {
         } else if (propertyType.isAssignableFrom(LocalDateTime.class)
                 || propertyType.isAssignableFrom(Date.class)) {
             component = new DateTimePicker();
+            component.getElement().getThemeList().add("picker-fixes");
         } else if (propertyType.isAssignableFrom(Boolean.class)) {
             component = new Checkbox();
         } else if (propertyType.isEnum()) {

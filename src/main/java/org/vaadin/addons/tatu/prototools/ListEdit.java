@@ -46,6 +46,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         this.beanType = beanType;
         grid = new AutoGrid<>(beanType, autoBuild);
         grid.addClassNames("p-s","shadow-xs");
+        grid.setResponsive(true);
 
         dataView = grid.setItems(defaultValue);
 

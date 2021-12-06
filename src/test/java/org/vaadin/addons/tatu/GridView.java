@@ -17,6 +17,7 @@ public class GridView extends Div {
     public GridView() {
         AutoGrid<Person> autoGrid = new AutoGrid<>(Person.class, false);
         autoGrid.setItems(new Person(), new Person(), new Person());
+        autoGrid.setResponsive(true);
         autoGrid.setColumns("firstName", "lastName", "gender", "weight",
                 "email", "dateOfBirth");
         autoGrid.addListColumn("cars", Car.class,

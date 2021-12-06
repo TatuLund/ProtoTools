@@ -1,6 +1,5 @@
 package org.vaadin.addons.tatu.prototools;
 
-import java.lang.reflect.InvocationTargetException;
 import java.time.ZoneId;
 import java.util.Date;
 
@@ -13,18 +12,18 @@ import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.data.binder.BeanPropertySet;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.PropertyDefinition;
 import com.vaadin.flow.data.binder.PropertySet;
 import com.vaadin.flow.data.converter.LocalDateTimeToDateConverter;
-import com.vaadin.flow.data.converter.LocalDateToDateConverter;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 @Tag("div")
+@CssImport(value = "./picker-responsive.css", themeFor="vaadin-date-time-picker-custom-field")
 public class Form<T> extends AbstractField<Form<T>, T>
         implements HasSize, HasValidation, HasComponents {
 
@@ -134,7 +133,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
         propertySet.getProperty(property).ifPresent(prop -> {
             PopupForm<?> form = new PopupForm<>(beanBeanType, autoCreate);
             if (beanProperties != null)
-                form.setColumns(beanProperties);
+                form.setProperties(beanProperties);
             configureComponent(prop, form);
             form.setLabel(Utils.formatName(property));
         });
@@ -166,6 +165,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
                         .bind(property.getName());
             } else if (property.getType().isAssignableFrom(Date.class)) {
                 DateTimePicker comp = (DateTimePicker) component;
+                comp.getElement().getThemeList().add("picker-responsive");
                 binder.forField(comp)
                         .withConverter(new LocalDateTimeToDateConverter(
                                 ZoneId.systemDefault()))

@@ -2,20 +2,14 @@ package org.vaadin.addons.tatu.prototools;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.Composite;
-import com.vaadin.flow.component.HasElement;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasValidation;
-import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Tag;
-import com.vaadin.flow.component.AbstractField.ComponentValueChangeEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -59,6 +53,7 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
         span.add(close,title);
         dialog.add(span,listEdit);
         dialog.setResizable(false);
+        dialog.setMinWidth("1000px");
         button.setText("(" + defaultValue.size() + ")");
         button.setIcon(VaadinIcon.EDIT.create());
         button.addClickListener(event -> {

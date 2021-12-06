@@ -78,7 +78,7 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
         title.setText(text);
     }
 
-    public void setColumns(String... propertyNames) {
+    public void setProperties(String... propertyNames) {
         form.setProperties(propertyNames);
     }
 
