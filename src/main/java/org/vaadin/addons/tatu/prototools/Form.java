@@ -23,7 +23,7 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 @Tag("div")
-@CssImport(value = "./picker-responsive.css", themeFor="vaadin-date-time-picker-custom-field")
+@CssImport(value = "./picker-responsive.css", themeFor="vaadin-date-time-picker")
 public class Form<T> extends AbstractField<Form<T>, T>
         implements HasSize, HasValidation, HasComponents {
 

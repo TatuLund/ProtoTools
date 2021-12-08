@@ -35,6 +35,7 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 @CssImport(value = "./picker-fixes.css", themeFor="vaadin-combo-box-overlay")
+@CssImport(value = "./time-picker-width.css", themeFor="vaadin-date-time-picker-time-picker")
 public class AutoGrid<T> extends Grid<T> {
 
     private BeanValidationBinder<T> binder;
@@ -105,6 +106,11 @@ public class AutoGrid<T> extends Grid<T> {
                     Component component = FieldFactory.createField(property);
                     configureComponent(property, component);
                 });
+        getColumns().forEach(col -> {
+            if (col.getEditorComponent() instanceof DateTimePicker) {
+                col.setWidth("220px");
+            }
+        });
     }
 
     public void setColumns(String... propertyNames) {
@@ -259,7 +265,6 @@ public class AutoGrid<T> extends Grid<T> {
             component.getElement().getThemeList().add("small");
         }
         component.getElement().getStyle().set("width", "100%");
-
     }
 
     private void validationStatusHandler(BindingValidationStatus<?> handler,
