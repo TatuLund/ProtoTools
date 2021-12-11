@@ -1,7 +1,13 @@
 # Proto Tools
 
+## Intro
+
 Vaadin 21 components for creating quick prototype applications or otherwise 
-rapid small application development.
+rapid small application development. This is sort of mini framework on top
+of Vaadin. The components are oppinnionated. The API of the components is kept
+purposefully minimal. 
+
+## Components
 
 ### Form<T>
 
@@ -35,6 +41,23 @@ Simple Grid + Form CRUD view.
 
 Component extending AppLayout with menu automatically generated from Route registry.
 The @PageTitle is used for menu titles and class name as fall back.
+
+## Data model
+
+Many of the components are using BeanValidationBinder internally. This means that
+for data validation you can use JSR-303 annotations in the entities.
+
+Components use FieldFactory which uses the following data type mapping
+
+* String -> TextField
+* Date, LocalDateTime -> DateTimePicker
+* LocalDate -> DatePicker
+* Enum -> ComboBox (Enum constants are automatically used as set of items to select from)
+* Boolean -> Checkbox
+* Double -> NumberFied
+* Integer -> IntegerField
+* LocalTime -> TimePicker
+* BigDecimal -> BigDecimal
 
 ## Development instructions
 
