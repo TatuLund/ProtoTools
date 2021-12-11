@@ -137,14 +137,6 @@ public class MenuLayout extends AppLayout {
     protected void afterNavigation() {
         super.afterNavigation();
         viewTitle.setText(getCurrentPageTitle());
-        getContent().setId("i-am-here");
-        getContent().getElement().getStyle().set("overflow", "auto");
-        getContent().getElement().executeJs(
-                "this.addEventListener('scroll', function(e) { console.log(this.scrollTop)}, true);");
-        getContent().getElement().addEventListener("scroll", event -> {
-            System.out.println(
-                    "Scroll view scroll: " + event.getEventData().toJson());
-        });
     }
 
     private String getCurrentPageTitle() {

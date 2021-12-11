@@ -4,7 +4,7 @@
 
 Vaadin 21 components for creating quick prototype applications or otherwise 
 rapid small application development. This is sort of mini framework on top
-of Vaadin. The components are oppinnionated. The API of the components is kept
+of Vaadin. The components are opinionated. The API of the components is kept
 purposefully minimal. 
 
 ## Components

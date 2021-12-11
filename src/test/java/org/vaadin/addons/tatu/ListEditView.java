@@ -1,5 +1,6 @@
 package org.vaadin.addons.tatu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.vaadin.addons.tatu.data.Car;
@@ -32,8 +33,10 @@ public class ListEditView extends Div {
         listEdit.addListColumn("cars", Car.class,
                 Void -> new Car("Kia", "Ceed"), "brand", "model");
         listEdit.addBeanColumn("license", License.class, "license", "licensor");
-        binder.forField(listEdit).withValidator(value -> value.size() == 3, "Input three entries").bind(PersonRoster::getPersons,
-                PersonRoster::setPersons);
+        binder.forField(listEdit)
+                .withValidator(value -> value.size() == 3,
+                        "Input three entries")
+                .bind(PersonRoster::getPersons, PersonRoster::setPersons);
         binder.setBean(personRoster);
         listEdit.setWidth("100%");
         listEdit.addValueChangeListener(event -> {
@@ -59,7 +62,7 @@ public class ListEditView extends Div {
     }
 
     public class PersonRoster {
-        private List<Person> persons;
+        private List<Person> persons = new ArrayList<>();
 
         public void setPersons(List<Person> persons) {
             this.persons = persons;

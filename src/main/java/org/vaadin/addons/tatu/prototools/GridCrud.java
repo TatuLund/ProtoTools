@@ -1,5 +1,6 @@
 package org.vaadin.addons.tatu.prototools;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 import com.vaadin.flow.component.Composite;
@@ -21,14 +22,16 @@ public class GridCrud<T> extends Composite<Div> {
     }
 
     public GridCrud(Class<T> beanType, boolean autoBuild) {
-        grid = new AutoGrid<>(beanType,autoBuild);
-        form = new Form<>(null,beanType,autoBuild);
+        grid = new AutoGrid<>(beanType, autoBuild);
+        form = new Form<>(null, beanType, autoBuild);
         form.setVisible(false);
 
-        layout.addClassNames("grid","grid-cols-2","gap-s");
-//        layout.setSizeFull();
+        layout.addClassNames("grid", "grid-cols-2", "gap-s");
+        // layout.setSizeFull();
 
-        grid.getElement().getClassList().add("col-span-2");
+        grid.getElement().getClassList()
+                .addAll(Arrays.asList("col-span-2", "shadow-xs"));
+
         grid.setEditorDisabled(true);
         grid.addSelectionListener(event -> {
             event.getFirstSelectedItem().ifPresentOrElse(item -> {
@@ -36,18 +39,20 @@ public class GridCrud<T> extends Composite<Div> {
                 form.setValue(item);
                 layout.removeClassName("grid-cols-2");
                 layout.addClassName("grid-cols-3");
+                grid.setHeight("100%");
             }, () -> {
                 form.setVisible(false);
                 layout.removeClassName("grid-cols-3");
                 layout.addClassName("grid-cols-2");
+                grid.setSizeUndefined();
             });
         });
         form.addValueChangeListener(event -> {
-           grid.getDataProvider().refreshItem(event.getValue()); 
+            grid.getDataProvider().refreshItem(event.getValue());
         });
-        layout.add(grid,form);
+        layout.add(grid, form);
     }
-    
+
     public void setItems(T... items) {
         grid.setItems(items);
     }
@@ -55,7 +60,7 @@ public class GridCrud<T> extends Composite<Div> {
     public void setItems(Collection<T> items) {
         grid.setItems(items);
     }
-    
+
     public void setGridProperties(String... properties) {
         grid.setColumns(properties);
     }
