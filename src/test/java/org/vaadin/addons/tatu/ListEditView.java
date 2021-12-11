@@ -32,7 +32,7 @@ public class ListEditView extends Div {
         listEdit.addListColumn("cars", Car.class,
                 Void -> new Car("Kia", "Ceed"), "brand", "model");
         listEdit.addBeanColumn("license", License.class, "license", "licensor");
-        binder.forField(listEdit).bind(PersonRoster::getPersons,
+        binder.forField(listEdit).withValidator(value -> value.size() == 3, "Input three entries").bind(PersonRoster::getPersons,
                 PersonRoster::setPersons);
         binder.setBean(personRoster);
         listEdit.setWidth("100%");

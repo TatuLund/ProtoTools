@@ -1,0 +1,3 @@
+:host([theme~="picker-responsive"]) .slot-container {
+    flex-wrap: wrap;
+}

@@ -9,14 +9,19 @@ import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.Tag;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.grid.Grid.Column;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 @Tag("div")
+@CssImport("./styles.css")
+@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
 public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         implements HasSize, HasValidation, HasComponents {
 
@@ -29,6 +34,16 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     private Column<T> deleteColumn;
     private boolean readOnly;
     private Registration valueChangeRegistration;
+    private boolean invalid;
+    private Label error = new Label();
+
+    public ListEdit(Class<T> beanType) {
+        this(new ArrayList<T>(), beanType, null, true);
+    }
+
+    public ListEdit(Class<T> beanType, boolean autoBuild) {
+        this(new ArrayList<T>(), beanType, null, autoBuild);
+    }
 
     public ListEdit(Class<T> beanType, ValueProvider<Void, T> beanProvider) {
         this(new ArrayList<T>(), beanType, beanProvider, true);
@@ -45,7 +60,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         this.beanProvider = beanProvider;
         this.beanType = beanType;
         grid = new AutoGrid<>(beanType, autoBuild);
-        grid.addClassNames("p-s","shadow-xs");
+        grid.addClassNames("p-s", "shadow-xs");
         grid.setResponsive(true);
 
         dataView = grid.setItems(defaultValue);
@@ -62,14 +77,21 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
             if (readOnly)
                 return;
             hasChanges = false;
-            T newItem = this.beanProvider.apply(null);
+            T newItem = null;
+            if (beanProvider != null) {
+                newItem = this.beanProvider.apply(null);
+            } else {
+                try {
+                    newItem = beanType.newInstance();
+                } catch (InstantiationException | IllegalAccessException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
             dataView.addItem(newItem);
             doSetInternalValue();
             grid.getEditor().editItem(newItem);
         });
-        if (beanProvider == null) {
-            addButton.setVisible(false);
-        }
 
         grid.setAllRowsVisible(true);
         if (autoBuild) {
@@ -81,7 +103,11 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         if (defaultValue != null) {
             setModelValue(defaultValue, false);
         }
-        add(grid, addButton);
+
+        error.addClassName("text-error");
+        error.setVisible(false);
+
+        add(grid, addButton, error);
     }
 
     private void addDeleteColumn() {
@@ -116,21 +142,24 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     }
 
     public void setColumns(String... propertyNames) {
-        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        if (valueChangeRegistration != null)
+            valueChangeRegistration.remove();
         grid.setColumns(propertyNames);
         addDeleteColumn();
         setupValueChangeListener();
     }
 
     private void setupValueChangeListener() {
-        valueChangeRegistration = grid.getBinder().addValueChangeListener(event -> {
-            hasChanges = true;
-        });
+        valueChangeRegistration = grid.getBinder()
+                .addValueChangeListener(event -> {
+                    hasChanges = true;
+                });
     }
 
     public void addListColumn(String property, Class listBeanType,
             ValueProvider listBeanProvider) {
-        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        if (valueChangeRegistration != null)
+            valueChangeRegistration.remove();
         grid.removeColumn(deleteColumn);
         grid.addListColumn(property, listBeanType, listBeanProvider, true,
                 null);
@@ -140,7 +169,8 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
 
     public void addListColumn(String property, Class listBeanType,
             ValueProvider listBeanProvider, String... listProperties) {
-        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        if (valueChangeRegistration != null)
+            valueChangeRegistration.remove();
         grid.removeColumn(deleteColumn);
         grid.addListColumn(property, listBeanType, listBeanProvider, false,
                 listProperties);
@@ -149,7 +179,8 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     }
 
     public void addBeanColumn(String property, Class listBeanType) {
-        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        if (valueChangeRegistration != null)
+            valueChangeRegistration.remove();
         grid.removeColumn(deleteColumn);
         grid.addBeanColumn(property, listBeanType, true, null);
         addDeleteColumn();
@@ -158,7 +189,8 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
 
     public void addBeanColumn(String property, Class listBeanType,
             String... listProperties) {
-        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        if (valueChangeRegistration != null)
+            valueChangeRegistration.remove();
         grid.removeColumn(deleteColumn);
         grid.addBeanColumn(property, listBeanType, false, listProperties);
         addDeleteColumn();
@@ -172,24 +204,33 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
 
     @Override
     public void setErrorMessage(String errorMessage) {
-        // TODO Auto-generated method stub
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+            error.setVisible(true);
+            error.setText(errorMessage);
+        } else {
+            error.setVisible(false);
+        }
     }
 
     @Override
     public String getErrorMessage() {
-        // TODO Auto-generated method stub
-        return null;
+        return error.getText();
     }
 
     @Override
     public void setInvalid(boolean invalid) {
-        // TODO Auto-generated method stub
+        this.invalid = invalid;
+        if (invalid) {
+            grid.addClassNames("border", "border-error");
+        } else {
+            grid.removeClassNames("border", "border-error");
+            error.setVisible(false);
+        }
     }
 
     @Override
     public boolean isInvalid() {
-        // TODO Auto-generated method stub
-        return false;
+        return invalid;
     }
 
     @Override

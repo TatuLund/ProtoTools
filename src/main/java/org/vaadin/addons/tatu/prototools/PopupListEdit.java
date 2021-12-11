@@ -9,6 +9,8 @@ import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Span;
@@ -17,6 +19,8 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 
 @Tag("div")
+@CssImport("./styles.css")
+@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
 public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
         implements HasSize, HasValidation {
 

@@ -14,6 +14,8 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.data.binder.BeanPropertySet;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.PropertyDefinition;
@@ -23,6 +25,8 @@ import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
 @Tag("div")
+@CssImport("./styles.css")
+@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
 @CssImport(value = "./picker-responsive.css", themeFor="vaadin-date-time-picker")
 public class Form<T> extends AbstractField<Form<T>, T>
         implements HasSize, HasValidation, HasComponents {
@@ -32,6 +36,8 @@ public class Form<T> extends AbstractField<Form<T>, T>
     private Class<T> beanType;
     private T bean;
     private Registration valueChangeRegistration;
+    private Label error = new Label();
+    private boolean invalid;
 
     public Form(T defaultValue, Class<T> beanType) {
         this(defaultValue, beanType, true);
@@ -55,7 +61,11 @@ public class Form<T> extends AbstractField<Form<T>, T>
 
             binder.setBean(bean);
         }
-        add(form);
+
+        error.addClassName("text-error");
+        error.setVisible(false);
+        
+        add(form, error);
     }
 
     private void setupValueChangeListener() {
@@ -117,13 +127,13 @@ public class Form<T> extends AbstractField<Form<T>, T>
         setupValueChangeListener();
     }
 
-    public void addBeanProperty(String property, Class listBeanType) {
-        this.addBeanProperty(property, listBeanType, true, null);
+    public void addBeanProperty(String property, Class beanBeanType) {
+        this.addBeanProperty(property, beanBeanType, true, null);
     }
 
-    public void addBeanProperty(String property, Class listBeanType,
-            String... listProperties) {
-        this.addBeanProperty(property, listBeanType, false, listProperties);
+    public void addBeanProperty(String property, Class beanBeanType,
+            String... beanProperties) {
+        this.addBeanProperty(property, beanBeanType, false, beanProperties);
     }
 
     protected void addBeanProperty(String property, Class beanBeanType,
@@ -182,26 +192,32 @@ public class Form<T> extends AbstractField<Form<T>, T>
 
     @Override
     public void setErrorMessage(String errorMessage) {
-        // TODO Auto-generated method stub
-
+        if (errorMessage != null && !errorMessage.isEmpty()) {
+            error.setVisible(true);
+            error.setText(errorMessage);
+        } else {
+            error.setVisible(false);
+        }
     }
 
     @Override
     public String getErrorMessage() {
-        // TODO Auto-generated method stub
-        return null;
+        return error.getText();
     }
 
     @Override
     public void setInvalid(boolean invalid) {
-        // TODO Auto-generated method stub
-
+        this.invalid = invalid;
+        if (invalid) {
+            form.addClassNames("border","border-error");
+        } else {
+            form.removeClassNames("border","border-error");            
+        }
     }
 
     @Override
     public boolean isInvalid() {
-        // TODO Auto-generated method stub
-        return false;
+        return invalid;
     }
 
     @Override

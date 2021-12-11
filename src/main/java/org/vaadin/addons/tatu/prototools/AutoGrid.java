@@ -16,6 +16,7 @@ import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
@@ -34,6 +35,8 @@ import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
 
+@CssImport("./styles.css")
+@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
 @CssImport(value = "./picker-fixes.css", themeFor="vaadin-combo-box-overlay")
 @CssImport(value = "./time-picker-width.css", themeFor="vaadin-date-time-picker-time-picker")
 public class AutoGrid<T> extends Grid<T> {
@@ -44,6 +47,7 @@ public class AutoGrid<T> extends Grid<T> {
     private Registration browserListener;
     private boolean responsive;
     private PropertySet<T> propertySet;
+    private boolean editorDisabled;
 
     public AutoGrid(Class<T> beanType) {
         this(beanType, true);
@@ -58,6 +62,7 @@ public class AutoGrid<T> extends Grid<T> {
         setDetailsVisibleOnClick(false);
 
         addItemClickListener(event -> {
+            if (editorDisabled) return;
             T item = event.getItem();
             // If editor is open already, lets close it
             if (getEditor().isOpen() && getEditor().getItem().equals(item)) {
@@ -88,6 +93,10 @@ public class AutoGrid<T> extends Grid<T> {
             return label;
         }));
 
+    }
+
+    public void setEditorDisabled(boolean editorDisabled) {
+        this.editorDisabled = editorDisabled;
     }
 
     public void setResponsive(boolean responsive) {
