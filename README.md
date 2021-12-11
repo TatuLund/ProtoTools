@@ -1,6 +1,7 @@
 # Proto Tools
 
-Vaadin 21 components for creating quick prototype applications
+Vaadin 21 components for creating quick prototype applications or otherwise 
+rapid small application development.
 
 ### Form<T>
 
@@ -25,6 +26,15 @@ ListEdit in a Dialog
 ### PopupForm<T>
 
 Form in a Dialog
+
+### GridCrud<T>
+
+Simple Grid + Form CRUD view.
+
+### MenuLayout
+
+Component extending AppLayout with menu automatically generated from Route registry.
+The @PageTitle is used for menu titles and class name as fall back.
 
 ## Development instructions
 
