@@ -104,7 +104,6 @@ public class MenuLayout extends AppLayout {
             if (title != null) {
                 titleString = title.value();
             } else {
-                String typeName = navigationTarget.getTypeName();
                 String simpleName = navigationTarget.getSimpleName();
                 titleString = Utils.formatName(simpleName);
             }

@@ -13,8 +13,6 @@ import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Span;
-import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 
@@ -46,18 +44,9 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
         super(defaultValue);
         listEdit = new ListEdit<>(defaultValue, beanType, beanProvider,
                 autoBuild);
-        Span span = new Span();
-        span.addClassNames("flex","flex-row","items-center","justify-between","p-s");
-        Icon close = VaadinIcon.CLOSE_SMALL.create();
-        close.addClickListener(event -> {
-           dialog.close(); 
-        });
         title = new H3();
-        title.addClassNames("text-header","text-l","my-0");
-        span.add(close,title);
-        dialog.add(span,listEdit);
-        dialog.setResizable(false);
-        dialog.setMinWidth("1000px");
+        setLabel(Utils.formatName(beanType.getSimpleName()));
+        dialog = new PopupEdit(title,listEdit);
         button.setText("(" + defaultValue.size() + ")");
         button.setIcon(VaadinIcon.EDIT.create());
         button.addClickListener(event -> {
