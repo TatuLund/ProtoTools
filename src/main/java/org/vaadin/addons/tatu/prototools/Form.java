@@ -12,10 +12,12 @@ import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.BeanPropertySet;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.PropertyDefinition;
@@ -27,7 +29,7 @@ import com.vaadin.flow.shared.Registration;
 @Tag("div")
 @CssImport("./styles.css")
 @NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
-@CssImport(value = "./picker-responsive.css", themeFor="vaadin-date-time-picker")
+@CssImport(value = "./picker-responsive.css", themeFor = "vaadin-date-time-picker")
 public class Form<T> extends AbstractField<Form<T>, T>
         implements HasSize, HasValidation, HasComponents {
 
@@ -50,7 +52,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
         this.bean = defaultValue;
         form = new EnhancedFormLayout();
         form.setStickyIndicator(true);
-        form.addClassNames("p-s","shadow-xs");
+        form.addClassNames("p-s", "shadow-xs");
 
         if (autoBuild) {
             binder = new BeanValidationBinder<>(beanType);
@@ -64,12 +66,13 @@ public class Form<T> extends AbstractField<Form<T>, T>
 
         error.addClassName("text-error");
         error.setVisible(false);
-        
+
         add(form, error);
     }
 
     private void setupValueChangeListener() {
-        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        if (valueChangeRegistration != null)
+            valueChangeRegistration.remove();
         valueChangeRegistration = binder.addValueChangeListener(event -> {
             if (binder.isValid()) {
                 setModelValue(binder.getBean(), true);
@@ -114,7 +117,8 @@ public class Form<T> extends AbstractField<Form<T>, T>
     protected void addListProperty(String property, Class listBeanType,
             ValueProvider listBeanProvider, boolean autoCreate,
             String... listProperties) {
-        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        if (valueChangeRegistration != null)
+            valueChangeRegistration.remove();
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         propertySet.getProperty(property).ifPresent(prop -> {
             PopupListEdit<?> listEdit = new PopupListEdit<>(listBeanType,
@@ -138,7 +142,8 @@ public class Form<T> extends AbstractField<Form<T>, T>
 
     protected void addBeanProperty(String property, Class beanBeanType,
             boolean autoCreate, String... beanProperties) {
-        if (valueChangeRegistration != null) valueChangeRegistration.remove();
+        if (valueChangeRegistration != null)
+            valueChangeRegistration.remove();
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         propertySet.getProperty(property).ifPresent(prop -> {
             PopupForm<?> form = new PopupForm<>(beanBeanType, autoCreate);
@@ -164,7 +169,8 @@ public class Form<T> extends AbstractField<Form<T>, T>
     private void configureComponent(PropertyDefinition<T, ?> property,
             Component component) {
 
-        if (component == null) return;
+        if (component == null)
+            return;
         if (component instanceof HasValue) {
             HasValue<?, ?> hasValue = (HasValue) component;
             if (property.getType().isEnum()) {
@@ -175,18 +181,26 @@ public class Form<T> extends AbstractField<Form<T>, T>
                         .bind(property.getName());
             } else if (property.getType().isAssignableFrom(Date.class)) {
                 DateTimePicker comp = (DateTimePicker) component;
-                comp.getElement().getThemeList().add("picker-responsive");
                 binder.forField(comp)
                         .withConverter(new LocalDateTimeToDateConverter(
                                 ZoneId.systemDefault()))
                         .bind(property.getName());
             } else {
+                if (component instanceof DatePicker
+                        || component instanceof TimePicker) {
+                    component.getElement()
+                            .executeJs("this.$.input.autoselect=true;");
+                } else if (component instanceof DateTimePicker) {
+                    component.getElement().getThemeList().add("picker-responsive");
+                    component.getElement().executeJs(
+                            "this.$.dateSlot.getElementsByTagName('vaadin-date-time-picker-date-picker')[0].$.input.autoselect=true;");
+                }
                 binder.forField(hasValue).bind(property.getName());
             }
         }
 
         form.addFormItem(component, Utils.formatName(property.getName()));
-        component.getElement().getThemeList().add("small");
+//        component.getElement().getThemeList().add("small");
         component.getElement().getStyle().set("width", "100%");
     }
 
@@ -209,9 +223,9 @@ public class Form<T> extends AbstractField<Form<T>, T>
     public void setInvalid(boolean invalid) {
         this.invalid = invalid;
         if (invalid) {
-            form.addClassNames("border","border-error");
+            form.addClassNames("border", "border-error");
         } else {
-            form.removeClassNames("border","border-error");            
+            form.removeClassNames("border", "border-error");
         }
     }
 

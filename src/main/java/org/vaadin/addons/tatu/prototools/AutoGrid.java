@@ -1,5 +1,6 @@
 package org.vaadin.addons.tatu.prototools;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -37,8 +38,8 @@ import com.vaadin.flow.shared.Registration;
 
 @CssImport("./styles.css")
 @NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
-@CssImport(value = "./picker-fixes.css", themeFor="vaadin-combo-box-overlay")
-@CssImport(value = "./time-picker-width.css", themeFor="vaadin-date-time-picker-time-picker")
+@CssImport(value = "./picker-fixes.css", themeFor = "vaadin-combo-box-overlay")
+@CssImport(value = "./time-picker-width.css", themeFor = "vaadin-date-time-picker-time-picker")
 public class AutoGrid<T> extends Grid<T> {
 
     private BeanValidationBinder<T> binder;
@@ -62,7 +63,8 @@ public class AutoGrid<T> extends Grid<T> {
         setDetailsVisibleOnClick(false);
 
         addItemClickListener(event -> {
-            if (editorDisabled) return;
+            if (editorDisabled)
+                return;
             T item = event.getItem();
             // If editor is open already, lets close it
             if (getEditor().isOpen() && getEditor().getItem().equals(item)) {
@@ -107,7 +109,7 @@ public class AutoGrid<T> extends Grid<T> {
         return binder;
     }
 
-    private void configureColumns(Class<T> beanType) {        
+    private void configureColumns(Class<T> beanType) {
         propertySet.getProperties()
                 .filter(property -> !property.isSubProperty()).sorted((prop1,
                         prop2) -> prop1.getName().compareTo(prop2.getName()))
@@ -136,19 +138,22 @@ public class AutoGrid<T> extends Grid<T> {
     private void createCompactColumn(String... propertyNames) {
         addComponentColumn(item -> {
             Div div = new Div();
-            div.addClassNames("grid","grid-cols-2","shadow-m","p-s");
+            div.addClassNames("grid", "grid-cols-2", "shadow-m", "p-s");
             Stream.of(propertyNames).limit(4).forEach(propName -> {
-                PropertyDefinition<T, ?> property = propertySet.getProperty(propName).get();
+                PropertyDefinition<T, ?> property = propertySet
+                        .getProperty(propName).get();
                 Object valueObj = property.getGetter().apply(item);
-                String valueString = (valueObj != null) ? valueObj.toString() : "";
+                String valueString = (valueObj != null) ? valueObj.toString()
+                        : "";
                 Label name = new Label(Utils.formatName(propName));
                 name.addClassName("text-secondary");
                 Span value = new Span(valueString);
-                div.add(name,value);
+                div.add(name, value);
             });
-            
+
             Icon edit = VaadinIcon.EDIT.create();
-            edit.addClassNames("col-span-2","text-xs","text-primary","ml-auto");
+            edit.addClassNames("col-span-2", "text-xs", "text-primary",
+                    "ml-auto");
 
             edit.addClickListener(event -> {
                 Dialog dialog = new Dialog();

@@ -1,5 +1,7 @@
 package org.vaadin.addons.tatu.data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,8 +20,8 @@ public class Person extends AbstractEntity {
     @Min(value = 40, message = "Weight should be atleast 40")
     private int weight;
     @Past(message = "Date of birth must in the past")
-    private Date dateOfBirth;
-    @Email(message = "Email should be valid")
+    private LocalDateTime dateOfBirth;
+    @Email(message = "Emasil should be valid")
     private String email;
     @NotNull(message = "Gender is mandatory to fill")
     private Gender gender;
@@ -30,8 +32,8 @@ public class Person extends AbstractEntity {
         firstName = "John";
         lastName = "Doe";
         weight = 70;
-        // dateOfBirth = LocalDate.now().minusYears(25);
-        dateOfBirth = new Date();
+        dateOfBirth = LocalDateTime.now().minusYears(25);
+//        dateOfBirth = new Date();
         cars = new ArrayList<>();
         cars.add(new Car("Ford", "Mondeo"));
         cars.add(new Car("Toyota", "Yaris"));
@@ -62,11 +64,11 @@ public class Person extends AbstractEntity {
         this.weight = age;
     }
 
-    public Date getDateOfBirth() {
+    public LocalDateTime getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDateTime dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
