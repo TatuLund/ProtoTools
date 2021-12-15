@@ -2,10 +2,12 @@ package org.vaadin.addons.tatu.prototools;
 
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.logging.Handler;
 
 import com.vaadin.componentfactory.EnhancedFormLayout;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Focusable;
 import com.vaadin.flow.component.HasComponents;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.HasValidation;
@@ -20,6 +22,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.BeanPropertySet;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.BindingValidationStatus;
 import com.vaadin.flow.data.binder.PropertyDefinition;
 import com.vaadin.flow.data.binder.PropertySet;
 import com.vaadin.flow.data.converter.LocalDateTimeToDateConverter;
@@ -178,12 +181,17 @@ public class Form<T> extends AbstractField<Form<T>, T>
                 ComboBox<String> comp = (ComboBox<String>) component;
                 binder.forField(comp)
                         .withConverter(new StringToEnumConverter(e))
+                        .withValidationStatusHandler(
+                                event -> handleValidationStatus(hasValue, event))
                         .bind(property.getName());
             } else if (property.getType().isAssignableFrom(Date.class)) {
                 DateTimePicker comp = (DateTimePicker) component;
                 binder.forField(comp)
                         .withConverter(new LocalDateTimeToDateConverter(
                                 ZoneId.systemDefault()))
+                        .withValidationStatusHandler(
+                                event -> handleValidationStatus(hasValue,
+                                        event))
                         .bind(property.getName());
             } else {
                 if (component instanceof DatePicker
@@ -191,17 +199,46 @@ public class Form<T> extends AbstractField<Form<T>, T>
                     component.getElement()
                             .executeJs("this.$.input.autoselect=true;");
                 } else if (component instanceof DateTimePicker) {
-                    component.getElement().getThemeList().add("picker-responsive");
+                    component.getElement().getThemeList()
+                            .add("picker-responsive");
                     component.getElement().executeJs(
                             "this.$.dateSlot.getElementsByTagName('vaadin-date-time-picker-date-picker')[0].$.input.autoselect=true;");
                 }
-                binder.forField(hasValue).bind(property.getName());
+                binder.forField(hasValue).withValidationStatusHandler(
+                        event -> handleValidationStatus(hasValue, event))
+                        .bind(property.getName());
             }
         }
 
         form.addFormItem(component, Utils.formatName(property.getName()));
-//        component.getElement().getThemeList().add("small");
+        // component.getElement().getThemeList().add("small");
         component.getElement().getStyle().set("width", "100%");
+    }
+
+    // Binder is not normally having "sticky" fields. With this custom
+    // handler we force focus back to invalid field
+    private void handleValidationStatus(HasValue<?, ?> hasValue,
+            BindingValidationStatus<?> event) {
+        event.getResult().ifPresent(result -> {
+            if (result.isError()) {
+                if (hasValue instanceof HasValidation) {
+                    HasValidation hasValidation = (HasValidation) hasValue;
+                    hasValidation.setInvalid(true);
+                    event.getMessage().ifPresent(
+                            message -> hasValidation.setErrorMessage(message));
+                }
+                if (hasValue instanceof Focusable) {
+                    Focusable focusable = (Focusable) hasValue;
+                    focusable.focus();
+                }
+            } else {
+                if (hasValue instanceof HasValidation) {
+                    HasValidation hasValidation = (HasValidation) hasValue;
+                    hasValidation.setInvalid(false);
+                    hasValidation.setErrorMessage(null);
+                }                
+            }
+        });
     }
 
     @Override

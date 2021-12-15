@@ -286,6 +286,12 @@ public class AutoGrid<T> extends Grid<T> {
         handler.getMessage().ifPresent(message -> itemErrorLabel = message);
         setDetailsVisible(binder.getBean(), handler.isError());
         hasValidation.setInvalid(handler.isError());
+        if (handler.isError()) {
+            if (hasValidation instanceof Focusable) {
+                Focusable focusable = (Focusable) hasValidation;
+                focusable.focus();
+            }
+        }
     }
 
     @Override
