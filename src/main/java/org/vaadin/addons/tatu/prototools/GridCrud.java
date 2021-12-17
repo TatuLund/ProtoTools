@@ -27,11 +27,7 @@ public class GridCrud<T> extends AbstractCrud<T> {
         grid.setEditorDisabled(true);
         grid.addSelectionListener(event -> {
             event.getFirstSelectedItem().ifPresentOrElse(item -> {
-                form.setVisible(true);
-                form.setValue(item);
-                layout.removeClassName("grid-cols-2");
-                layout.addClassName("grid-cols-3");
-                grid.setHeight("100%");
+                editItem(item);
             }, () -> {
                 form.setVisible(false);
                 layout.removeClassName("grid-cols-3");
@@ -44,4 +40,15 @@ public class GridCrud<T> extends AbstractCrud<T> {
         });
         layout.add(grid, form);
     }
+
+    @Override
+    public void editItem(T item) {
+        form.setVisible(true);
+        form.setValue(item);
+        layout.removeClassName("grid-cols-2");
+        layout.addClassName("grid-cols-3");
+        grid.setHeight("100%");
+    }
+
+    
 }

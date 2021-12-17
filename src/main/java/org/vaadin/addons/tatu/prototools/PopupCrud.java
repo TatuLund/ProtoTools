@@ -32,11 +32,16 @@ public class PopupCrud<T> extends AbstractCrud<T> {
             Button button = new Button();
             button.setIcon(VaadinIcon.EDIT.create());
             button.addClickListener(event -> {
-                form.setValue(item);
-                dialog.open(); 
+                editItem(item); 
             });
             return button;
         });
+    }
+
+    @Override
+    public void editItem(T item) {
+        form.setValue(item);
+        dialog.open();
     }
 
     @Override

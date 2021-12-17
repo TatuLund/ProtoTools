@@ -1,6 +1,5 @@
 package org.vaadin.addons.tatu.prototools;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
@@ -18,9 +17,9 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -49,7 +48,9 @@ public class AutoGrid<T> extends Grid<T> {
     private boolean responsive;
     private PropertySet<T> propertySet;
     private boolean editorDisabled;
-
+    private PopupEdit dialog;
+    private Form<T> form;
+    
     public AutoGrid(Class<T> beanType) {
         this(beanType, true);
     }
@@ -95,6 +96,13 @@ public class AutoGrid<T> extends Grid<T> {
             return label;
         }));
 
+        form = new Form<>(null, beanType, autoBuild);
+//        form.setProperties(propertyNames);
+        dialog = new PopupEdit(new H3(Utils.formatName(beanType.getSimpleName())),form);
+        form.addValueChangeListener(e -> {
+            getDataProvider().refreshItem(e.getValue());
+        });
+
     }
 
     public void setEditorDisabled(boolean editorDisabled) {
@@ -133,6 +141,7 @@ public class AutoGrid<T> extends Grid<T> {
         Stream.of(propertyNames).forEach(this::addColumn);
         configureColumns(beanType);
         getEditor().setBinder(binder);
+        form.setProperties(propertyNames);
     }
 
     private void createCompactColumn(String... propertyNames) {
@@ -156,14 +165,8 @@ public class AutoGrid<T> extends Grid<T> {
                     "ml-auto");
 
             edit.addClickListener(event -> {
-                Dialog dialog = new Dialog();
-                Form<T> popup = new Form<>(item, beanType, false);
-                popup.setProperties(propertyNames);
-                dialog.add(popup);
+                form.setValue(item);
                 dialog.open();
-                popup.addValueChangeListener(e -> {
-                    getDataProvider().refreshItem(item);
-                });
             });
             div.add(edit);
 
@@ -204,6 +207,7 @@ public class AutoGrid<T> extends Grid<T> {
                     .bind(property);
             listEdit.setLabel(name);
         });
+        form.addListProperty(property, listBeanType, listBeanProvider, autoCreate, listProperties);
     }
 
     public void addBeanColumn(String property, Class listBeanType) {
@@ -226,6 +230,7 @@ public class AutoGrid<T> extends Grid<T> {
             configureComponent(prop, form);
             form.setLabel(Utils.formatName(prop.getName()));
         });
+        form.addBeanProperty(property, beanBeanType, autoCreate, beanProperties);
     }
 
     private void configureComponent(PropertyDefinition<T, ?> property,
@@ -315,11 +320,19 @@ public class AutoGrid<T> extends Grid<T> {
     private void adjustVisibleGridColumns(int width) {
         // Change which columns are visible depending on browser width
         if (width > 1000) {
+            if (dialog.isOpened()) {
+                dialog.close();
+                getEditor().editItem(form.getValue());
+            }
             getColumns().get(0).setVisible(false);
             for (int c = 1; c < getColumns().size(); c++) {
                 getColumns().get(c).setVisible(true);
             }
         } else {
+            if (getEditor().isOpen()) {
+                form.setValue(getEditor().getItem());
+                dialog.open();
+            }
             getColumns().get(0).setVisible(true);
             for (int c = 1; c < getColumns().size(); c++) {
                 getColumns().get(c).setVisible(false);

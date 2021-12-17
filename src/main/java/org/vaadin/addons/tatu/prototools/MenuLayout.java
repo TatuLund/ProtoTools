@@ -6,9 +6,11 @@ import java.util.List;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -16,6 +18,10 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Header;
 import com.vaadin.flow.component.html.Nav;
 import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouteData;
 import com.vaadin.flow.router.RouterLink;
@@ -85,17 +91,17 @@ public class MenuLayout extends AppLayout {
 
         nav.add(views);
 
-        for (RouterLink link : createLinks()) {
+        for (Component link : createLinks()) {
             nav.add(link);
         }
         return nav;
     }
 
-    private List<RouterLink> createLinks() {
+    private List<Component> createLinks() {
         RouteRegistry reg = SessionRouteRegistry
                 .getSessionRegistry(VaadinSession.getCurrent());
         List<RouteData> routes = reg.getRegisteredRoutes();
-        List<RouterLink> links = new ArrayList<>();
+        List<Component> links = new ArrayList<>();
         routes.forEach(route -> {
             Class<? extends Component> navigationTarget = route
                     .getNavigationTarget();
@@ -107,9 +113,36 @@ public class MenuLayout extends AppLayout {
                 String simpleName = navigationTarget.getSimpleName();
                 titleString = Utils.formatName(simpleName);
             }
-            links.add(createLink(titleString, navigationTarget));
+            try {
+                RouterLink link = createLink(titleString, navigationTarget);
+                links.add(link);
+            } catch (IllegalArgumentException e) {
+                Span link = createTextField(route, titleString);
+                links.add(link);
+            }
         });
         return links;
+    }
+
+    private Span createTextField(RouteData route, String titleString) {
+        Span link = new Span(titleString);
+        String path = route.getTemplate().split("/")[0];
+        TextField field = new TextField();
+        field.addThemeVariants(TextFieldVariant.LUMO_SMALL);
+        Icon icon = VaadinIcon.ARROW_FORWARD.create();
+        icon.addClickListener(event -> {
+            if (field.getValue() != null && !field.getValue().isEmpty()
+                    && !field.getValue().isBlank()) {
+                getUI().ifPresent(
+                        ui -> ui.navigate(path + "/" + field.getValue()));
+            }
+        });
+        link.addClassNames("flex", "mx-s", "p-s", "font-medium",
+                "items-baseline", "text-s", "gap-s", "relative",
+                "text-secondary", "whitespace-nowrap");
+        field.setSuffixComponent(icon);
+        link.add(field);
+        return link;
     }
 
     private static RouterLink createLink(String titleString,
