@@ -1,29 +1,36 @@
-# Proto Tools
+# ProtoTools
 
 ## Intro
 
 Vaadin 21 components for creating quick prototype applications or otherwise 
 rapid small application development. This is sort of mini framework on top
 of Vaadin. The components are opinionated. The API of the components is kept
-purposefully minimal. 
+purposefully minimal. Thus ProtoTools can be seen as a opionated mini
+framework for low code application development.
 
 ## Components
 
 ### Form<T>
 
 Form that populates automatically based on the bean, using FieldFactory
+(see DataModel)
 
 List or Bean properties can be added too (uses PopupListEdit or PopupForm)
 
 ### ListEdit<T>
 
-List editor based on AutoGrid
+List editor based on AutoGrid. So it inherits its responsive features. Value
+of the ListEdit is the list of the items in it. I.e. this is not a selection
+component.
 
 ### AutoGrid<T>
 
-Grid with Editor auto generation
+Grid with Editor auto generation using FieldFactory (see DataModel)
 
 List or Bean properties can be added too (uses PopupListEdit or PopupForm)
+
+Grid is responsive, when you resize browser to be narrow, only one compact column with
+four first properties is shown and editor is shown as popup dialog instead.
 
 ### PopupListEdit<T>
 
@@ -35,19 +42,29 @@ Form in a Dialog
 
 ### GridCrud<T>
 
-Simple Grid + Form CRUD view.
+Simple Grid + Form aside Grid CRUD view.
+
+### GridCrud<T>
+
+Simple Grid + Form as popup dialog CRUD view.
 
 ### MenuLayout
 
 Component extending AppLayout with menu automatically generated from Route registry.
-The @PageTitle is used for menu titles and class name as fall back.
+The @PageTitle is used for menu titles and class name as fall back. Routes without
+parameters are generated as RouteLinks, and Routes with parameters as TextFields
+where you can input the parameter. (Route templates are not supported)
 
 ## Data model
+
+ProtoTools is purposed for simple applications, which you want to build fast.
+Thus data model is assumed to be relatively straightforward.
 
 Many of the components are using BeanValidationBinder internally. This means that
 for data validation you can use JSR-303 annotations in the entities.
 
-Components use FieldFactory which uses the following data type mapping
+Components use FieldFactory which uses the following data type mapping of the
+bean properties.
 
 * String -> TextField
 * Date, LocalDateTime -> DateTimePicker
@@ -58,6 +75,11 @@ Components use FieldFactory which uses the following data type mapping
 * Integer -> IntegerField
 * LocalTime -> TimePicker
 * BigDecimal -> BigDecimal
+
+Other data types are just skipped and custom fields are not supported.
+
+ProtoTools could be used also when data model is slightly more complex by introducing
+DTO layer that fits in.
 
 ## Development instructions
 
