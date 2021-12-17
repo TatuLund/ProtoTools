@@ -2,15 +2,14 @@ package org.vaadin.addons.tatu.prototools;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
-import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
-import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Footer;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H2;
@@ -133,8 +132,19 @@ public class MenuLayout extends AppLayout {
         icon.addClickListener(event -> {
             if (field.getValue() != null && !field.getValue().isEmpty()
                     && !field.getValue().isBlank()) {
-                getUI().ifPresent(
-                        ui -> ui.navigate(path + "/" + field.getValue()));
+                getUI().ifPresent(ui -> {
+                    String full = path + "/" + field.getValue();
+                    RouteRegistry reg = SessionRouteRegistry
+                            .getSessionRegistry(VaadinSession.getCurrent());
+                    Optional<Class<? extends Component>> target = reg
+                            .getNavigationTarget(full);
+                    if (target.isPresent()) {
+                        ui.navigate(full);
+                        field.setInvalid(false);
+                    } else {
+                        field.setInvalid(true);
+                    }
+                });
             }
         });
         link.addClassNames("flex", "mx-s", "p-s", "font-medium",
