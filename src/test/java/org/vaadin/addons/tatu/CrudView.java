@@ -17,11 +17,15 @@ public class CrudView extends Div {
     public CrudView() {
         GridCrud<Person> crud = new GridCrud<>(Person.class, false);
         crud.setItems(new Person(), new Person(), new Person());
+        // Show three properties in Grid
         crud.setGridProperties("firstName", "lastName", "gender");
+        // Show all needed properties in the form
         crud.setFormProperties("firstName", "lastName", "gender", "weight",
                 "email", "dateOfBirth");
+        // Add list editor for car list in the form
         crud.addListProperty("cars", Car.class,
                 Void -> new Car("Kia", "Ceed"), "brand", "model");
+        // Add sub form for license property
         crud.addBeanProperty("license", License.class, "license", "licensor");
 
         add(crud);

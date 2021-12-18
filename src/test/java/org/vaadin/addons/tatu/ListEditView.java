@@ -31,16 +31,20 @@ public class ListEditView extends Div implements HasUrlParameter<Integer> {
     public ListEditView() {
         ListEdit<Person> listEdit = new ListEdit<Person>(Person.class,
                 Void -> new Person());
+        // Configure columns
         listEdit.setColumns("firstName", "lastName", "gender", "weight",
                 "email", "dateOfBirth");
         listEdit.addListColumn("cars", Car.class,
                 Void -> new Car("Kia", "Ceed"), "brand", "model");
         listEdit.addBeanColumn("license", License.class, "license", "licensor");
+
+        // List editor is a field, you can bind it
         binder.forField(listEdit)
                 .withValidator(value -> value.size() == requiredPersons,
                         "Input required entries")
                 .bind(PersonRoster::getPersons, PersonRoster::setPersons);
         binder.setBean(personRoster);
+
         listEdit.setWidth("100%");
         listEdit.addValueChangeListener(event -> {
             Notification.show("Items " + listEdit.getValue().size()
