@@ -17,11 +17,15 @@ Form that populates automatically based on the bean, using FieldFactory
 
 List or Bean properties can be added too (uses PopupListEdit or PopupForm)
 
+![Form](https://github.com/TatuLund/ProtoTools/blob/master/Form.jpg?raw=true)
+
 ### ListEdit<T>
 
 List editor based on AutoGrid. So it inherits its responsive features. Value
 of the ListEdit is the list of the items in it. I.e. this is not a selection
 component.
+
+![Form](https://github.com/TatuLund/ProtoTools/blob/master/ListEdit.jpg?raw=true)
 
 ### AutoGrid<T>
 
@@ -29,8 +33,12 @@ Grid with Editor auto generation using FieldFactory (see DataModel)
 
 List or Bean properties can be added too (uses PopupListEdit or PopupForm)
 
+![AutoGrid](https://github.com/TatuLund/ProtoTools/blob/master/AutoGridWide.jpg?raw=true)
+
 Grid is responsive, when you resize browser to be narrow, only one compact column with
 four first properties is shown and editor is shown as popup dialog instead.
+
+![AutoGrid responsive](https://github.com/TatuLund/ProtoTools/blob/master/AutoGridResponsive.jpg?raw=true)
 
 ### PopupListEdit<T>
 
@@ -44,9 +52,13 @@ Form in a Dialog
 
 Simple Grid + Form aside Grid CRUD view.
 
-### GridCrud<T>
+![GridCrud](https://github.com/TatuLund/ProtoTools/blob/master/GridCrud.jpg?raw=true)
+
+### PopupCrud<T>
 
 Simple Grid + Form as popup dialog CRUD view.
+
+![PopupCrud](https://github.com/TatuLund/ProtoTools/blob/master/PopupCrud.jpg?raw=true)
 
 ### MenuLayout
 
@@ -54,6 +66,8 @@ Component extending AppLayout with menu automatically generated from Route regis
 The @PageTitle is used for menu titles and class name as fall back. Routes without
 parameters are generated as RouteLinks, and Routes with parameters as TextFields
 where you can input the parameter. (Route templates are not supported)
+
+![Menu responsive](https://github.com/TatuLund/ProtoTools/blob/master/MenuResponsive.jpg?raw=true)
 
 ## Data model
 
