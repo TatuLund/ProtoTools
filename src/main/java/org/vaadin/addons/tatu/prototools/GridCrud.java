@@ -2,21 +2,28 @@ package org.vaadin.addons.tatu.prototools;
 
 import java.util.Arrays;
 
+import com.vaadin.flow.component.AttachEvent;
+import com.vaadin.flow.component.DetachEvent;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.shared.Registration;
 
 @CssImport("./styles.css")
 @NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
-public class GridCrud<T> extends AbstractCrud<T> {
+public class GridCrud<T> extends AbstractGridCrud<T> {
+
+    private Registration browserListener;
+    private boolean wide;
 
     public GridCrud(Class<T> beanType) {
         this(beanType, true);
     }
 
     public GridCrud(Class<T> beanType, boolean autoBuild) {
+        super(beanType,autoBuild);
         grid = new AutoGrid<>(beanType, autoBuild);
-        form = new Form<>(null, beanType, autoBuild);
-        form.setVisible(false);
+        grid.setMinHeight("200px");
+        formPlus.setVisible(false);
 
         layout.addClassNames("grid", "grid-cols-2", "gap-s");
         // layout.setSizeFull();
@@ -29,26 +36,77 @@ public class GridCrud<T> extends AbstractCrud<T> {
             event.getFirstSelectedItem().ifPresentOrElse(item -> {
                 editItem(item);
             }, () -> {
-                form.setVisible(false);
-                layout.removeClassName("grid-cols-3");
-                layout.addClassName("grid-cols-2");
+                formPlus.setVisible(false);
+                if (wide) {
+                    layout.removeClassName("grid-cols-3");
+                    layout.addClassName("grid-cols-2");
+                }
                 grid.setSizeUndefined();
             });
         });
         form.addValueChangeListener(event -> {
             grid.getDataProvider().refreshItem(event.getValue());
         });
-        layout.add(grid, form);
+        
+        layout.add(grid, formPlus);
     }
 
     @Override
     public void editItem(T item) {
-        form.setVisible(true);
+        formPlus.setVisible(true);
         form.setValue(item);
-        layout.removeClassName("grid-cols-2");
-        layout.addClassName("grid-cols-3");
+        if (wide) {
+            layout.removeClassName("grid-cols-2");
+            layout.addClassName("grid-cols-3");
+        }
         grid.setHeight("100%");
     }
 
-    
+    private void adjustLayout(int width) {
+        if (width < 900) {
+            wide = false;
+            if (formPlus.isVisible()) {
+                layout.removeClassName("grid-cols-3");
+                layout.addClassName("grid-cols-1");
+            } else {
+                layout.removeClassName("grid-cols-2");
+                layout.addClassName("grid-cols-1");
+            }
+        } else {
+            wide = true;
+            layout.removeClassName("grid-cols-1");
+            if (formPlus.isVisible()) {
+                layout.addClassName("grid-cols-3");
+            } else {
+                layout.addClassName("grid-cols-2");
+            }
+        }
+    }
+
+    @Override
+    protected void onAttach(AttachEvent attachEvent) {
+        super.onAttach(attachEvent);
+        // Add browser window listener to observe width change
+        getUI().ifPresent(ui -> browserListener = ui.getPage()
+                .addBrowserWindowResizeListener(event -> {
+                    adjustLayout(event.getWidth());
+                }));
+        // Adjust Grid according to initial width of the screen
+        getUI().ifPresent(
+                ui -> ui.getPage().retrieveExtendedClientDetails(receiver -> {
+                    int browserWidth = receiver.getBodyClientWidth();
+                    adjustLayout(browserWidth);
+                }));
+    }
+
+    @Override
+    protected void onDetach(DetachEvent detachEvent) {
+        // Listener needs to be eventually removed in order to avoid resource
+        // leak
+        if (browserListener != null) {
+            browserListener.remove();
+        }
+        super.onDetach(detachEvent);
+    }
+
 }

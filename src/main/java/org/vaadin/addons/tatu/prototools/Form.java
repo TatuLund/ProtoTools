@@ -2,7 +2,6 @@ package org.vaadin.addons.tatu.prototools;
 
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.logging.Handler;
 
 import com.vaadin.componentfactory.EnhancedFormLayout;
 import com.vaadin.flow.component.AbstractField;
@@ -235,7 +234,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
                 if (hasValue instanceof HasValidation) {
                     HasValidation hasValidation = (HasValidation) hasValue;
                     hasValidation.setInvalid(false);
-                    hasValidation.setErrorMessage(null);
+                    hasValidation.setErrorMessage("");
                 }                
             }
         });
@@ -278,6 +277,6 @@ public class Form<T> extends AbstractField<Form<T>, T>
 
     @Override
     public void setReadOnly(boolean readOnly) {
-        binder.setReadOnly(true);
+        binder.setReadOnly(readOnly);
     }
 }

@@ -333,10 +333,10 @@ public class AutoGrid<T> extends Grid<T> {
                 form.setValue(getEditor().getItem());
                 dialog.open();
             }
-            getColumns().get(0).setVisible(true);
             for (int c = 1; c < getColumns().size(); c++) {
                 getColumns().get(c).setVisible(false);
             }
+            getColumns().get(0).setVisible(true);
         }
 
     }

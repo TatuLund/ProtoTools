@@ -96,6 +96,11 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
     }
 
     @Override
+    public void setReadOnly(boolean readOnly) {
+        form.setReadOnly(readOnly);
+    }
+
+    @Override
     public boolean isInvalid() {
         return invalid;
     }

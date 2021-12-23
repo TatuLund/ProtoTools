@@ -5,7 +5,7 @@ import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 
-public class PopupCrud<T> extends AbstractCrud<T> {
+public class PopupCrud<T> extends AbstractGridCrud<T> {
 
     PopupEdit dialog;
     
@@ -14,12 +14,13 @@ public class PopupCrud<T> extends AbstractCrud<T> {
     }
 
     public PopupCrud(Class<T> beanType, boolean autoBuild) {
+        super(beanType,autoBuild);
         grid = new AutoGrid<>(beanType,autoBuild);
         grid.setEditorDisabled(true);
         grid.setSelectionMode(SelectionMode.NONE);
-        form = new Form<>(null, beanType, autoBuild);
+
         H3 title = new H3(Utils.formatName(beanType.getSimpleName()));
-        dialog = new PopupEdit(title,form);
+        dialog = new PopupEdit(title,formPlus);
         addEditColumn();
         form.addValueChangeListener(event -> {
             grid.getDataProvider().refreshItem(event.getValue());

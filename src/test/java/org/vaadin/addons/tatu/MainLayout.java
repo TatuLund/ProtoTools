@@ -2,6 +2,8 @@ package org.vaadin.addons.tatu;
 
 import org.vaadin.addons.tatu.prototools.MenuLayout;
 
+import com.vaadin.flow.component.UI;
+
 public class MainLayout extends MenuLayout {
 
     public MainLayout() {

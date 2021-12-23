@@ -15,6 +15,8 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.server.WebBrowser;
 
 @Tag("div")
 @CssImport("./styles.css")
@@ -44,6 +46,10 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
         super(defaultValue);
         listEdit = new ListEdit<>(defaultValue, beanType, beanProvider,
                 autoBuild);
+        WebBrowser browser = VaadinSession.getCurrent().getBrowser();
+        if (!(browser.isAndroid() || browser.isIPhone())) {
+            listEdit.setWidth("calc(100vw - 90px)");
+        }
         title = new H3();
         setLabel(Utils.formatName(beanType.getSimpleName()));
         dialog = new PopupEdit(title,listEdit);
@@ -92,6 +98,11 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
     @Override
     public String getErrorMessage() {
         return button.getElement().getAttribute("title");
+    }
+
+    @Override
+    public void setReadOnly(boolean readOnly) {
+        listEdit.setReadOnly(readOnly);
     }
 
     @Override

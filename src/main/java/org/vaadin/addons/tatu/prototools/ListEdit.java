@@ -12,6 +12,7 @@ import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.grid.Grid.Column;
+import com.vaadin.flow.component.grid.Grid.SelectionMode;
 import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
@@ -62,6 +63,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         grid = new AutoGrid<>(beanType, autoBuild);
         grid.addClassNames("p-s", "shadow-xs");
         grid.setResponsive(true);
+        grid.setSelectionMode(SelectionMode.NONE);
 
         dataView = grid.setItems(defaultValue);
 
@@ -120,7 +122,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
                 doSetInternalValue();
             });
             return deleteButton;
-        });
+        }).setKey("deleteColumn");
     }
 
     private void doSetInternalValue() {
@@ -236,7 +238,9 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     @Override
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
+        deleteColumn.setVisible(!readOnly);
         grid.setEnabled(!readOnly);
+        addButton.setVisible(!readOnly);
         super.setReadOnly(readOnly);
     }
 }

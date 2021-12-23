@@ -15,14 +15,19 @@ import com.vaadin.flow.router.Route;
 public class GridView extends Div {
 
     public GridView() {
+        // Instantiate a new AutoGrid
         AutoGrid<Person> autoGrid = new AutoGrid<>(Person.class, false);
         autoGrid.setItems(new Person(), new Person(), new Person());
+        // Set it be responsive
         autoGrid.setResponsive(true);
+        // Configure columns
         autoGrid.setColumns("firstName", "lastName", "gender", "weight",
                 "email", "dateOfBirth");
         autoGrid.addListColumn("cars", Car.class,
                 Void -> new Car("Kia", "Ceed"), "brand", "model");
         autoGrid.addBeanColumn("license", License.class, "license", "licensor");
+        // Nothing else is needed, the editor and responsiveness is generated
+        // automatically
 
         add(autoGrid);
     }

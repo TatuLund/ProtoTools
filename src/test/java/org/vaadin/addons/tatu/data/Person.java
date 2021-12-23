@@ -21,7 +21,7 @@ public class Person extends AbstractEntity {
     private int weight;
     @Past(message = "Date of birth must in the past")
     private LocalDateTime dateOfBirth;
-    @Email(message = "Emasil should be valid")
+    @Email(message = "Email should be valid")
     private String email;
     @NotNull(message = "Gender is mandatory to fill")
     private Gender gender;
