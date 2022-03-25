@@ -4,9 +4,15 @@ import org.vaadin.addons.tatu.data.Car;
 import org.vaadin.addons.tatu.data.License;
 import org.vaadin.addons.tatu.data.Person;
 import org.vaadin.addons.tatu.prototools.Form;
+import org.vaadin.addons.tatu.prototools.Paging;
 
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.data.provider.DataProvider;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
@@ -21,9 +27,9 @@ public class FormView extends Div {
         autoForm.setProperties("firstName", "lastName", "gender", "weight",
                 "email", "dateOfBirth");
         autoForm.addListProperty("cars", Car.class,
-                Void -> new Car("Kia", "Ceed"), "brand", "model");
+                Void -> new Car("Kia", "Ceed"), "brand", "model", "weight");
         autoForm.addBeanProperty("license", License.class, "license",
-                "licensor");
+                "licensor", "granted");
 
         // Form is a field, you can listen to value changes or bind it
         autoForm.addValueChangeListener(event -> {

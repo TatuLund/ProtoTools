@@ -17,10 +17,12 @@ import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
+import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.BeanPropertySet;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.BindingValidationStatus;
 import com.vaadin.flow.data.binder.PropertyDefinition;
 import com.vaadin.flow.data.binder.PropertySet;
@@ -77,7 +79,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
             valueChangeRegistration.remove();
         valueChangeRegistration = binder.addValueChangeListener(event -> {
             if (binder.isValid()) {
-                setModelValue(binder.getBean(), true);
+//                setModelValue(binder.getBean(), true);
                 fireEvent(createValueChange(binder.getBean(), true));
             }
         });
@@ -220,6 +222,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
             BindingValidationStatus<?> event) {
         event.getResult().ifPresent(result -> {
             if (result.isError()) {
+                this.setInvalid(true);
                 if (hasValue instanceof HasValidation) {
                     HasValidation hasValidation = (HasValidation) hasValue;
                     hasValidation.setInvalid(true);
@@ -231,6 +234,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
                     focusable.focus();
                 }
             } else {
+                this.setInvalid(false);
                 if (hasValue instanceof HasValidation) {
                     HasValidation hasValidation = (HasValidation) hasValue;
                     hasValidation.setInvalid(false);
@@ -267,6 +271,8 @@ public class Form<T> extends AbstractField<Form<T>, T>
 
     @Override
     public boolean isInvalid() {
+        BinderValidationStatus<T> validationStatus = binder.validate();
+        setInvalid(!validationStatus.isOk());
         return invalid;
     }
 

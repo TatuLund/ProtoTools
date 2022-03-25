@@ -7,6 +7,7 @@ import org.vaadin.addons.tatu.prototools.AutoGrid;
 import org.vaadin.addons.tatu.prototools.GridCrud;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.PageTitle;
@@ -26,15 +27,15 @@ public class CrudView extends Div {
                 "email", "dateOfBirth");
         // Add list editor for car list in the form
         crud.addListProperty("cars", Car.class,
-                Void -> new Car("Kia", "Ceed"), "brand", "model");
+                Void -> new Car("Kia", "Ceed"), "brand", "model", "weight", "available");
         // Add sub form for license propert
-        crud.addBeanProperty("license", License.class, "license", "licensor");
+        crud.addBeanProperty("license", License.class, "license", "licensor", "granted");
 
         Button readOnly = new Button(VaadinIcon.STOP.create());
         readOnly.addClickListener(event -> {
             crud.setReadOnly(!crud.isReadOnly());
         });
-
-        add(crud,readOnly);
+        
+        add(readOnly, crud);
     }
 }

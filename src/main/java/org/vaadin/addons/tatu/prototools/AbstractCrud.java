@@ -1,5 +1,8 @@
 package org.vaadin.addons.tatu.prototools;
 
+import java.util.WeakHashMap;
+
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Composite;

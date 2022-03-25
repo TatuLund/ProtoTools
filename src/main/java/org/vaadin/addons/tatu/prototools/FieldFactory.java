@@ -9,10 +9,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Focusable;
+import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -33,14 +36,18 @@ public class FieldFactory {
             ((IntegerField) component).setAutoselect(true);
         } else if (propertyType.isAssignableFrom(BigDecimal.class)) {
             component = new BigDecimalField();
+            clientValidationWorkaround(component);
+            component.getElement().executeJs("this.inputElement.addEventListener('change', () => { this.invalid = this.validate(); })");
             ((BigDecimalField) component).setAutoselect(true);
         } else if (propertyType.isAssignableFrom(Double.class)) {
             component = new NumberField();
             ((NumberField) component).setAutoselect(true);
         } else if (propertyType.isAssignableFrom(LocalDate.class)) {
             component = new DatePicker();
+            clientValidationWorkaround(component);
         } else if (propertyType.isAssignableFrom(LocalTime.class)) {
             component = new TimePicker();
+            component.getElement().executeJs("this.inputElement.addEventListener('change', () => { this.invalid = this.validate(); })");
         } else if (propertyType.isAssignableFrom(LocalDateTime.class)
                 || propertyType.isAssignableFrom(Date.class)) {
             component = new DateTimePicker();
@@ -58,6 +65,23 @@ public class FieldFactory {
         return component;
     }
 
+    private static void clientValidationWorkaround(Component component) {
+        if (component instanceof Focusable
+                && component instanceof HasValidation) {
+            Focusable<?> focusable = (Focusable<?>) component;
+            HasValidation hasValidation = (HasValidation) component;
+            focusable.addBlurListener(event -> {
+                component.getElement().executeJs("return this.validate();")
+                        .then(value -> {
+                            if (value.toJson() != null) {
+                                hasValidation.setInvalid(
+                                        !value.toJson().equals("true"));
+                            }
+                        });
+            });
+        }
+    }
+
     private static ComboBox<String> createEnumCombo(
             PropertyDefinition<?, ?> property) {
         ComboBox<String> comp = new ComboBox<String>();
@@ -69,5 +93,4 @@ public class FieldFactory {
         comp.setItems(values);
         return comp;
     }
-
 }

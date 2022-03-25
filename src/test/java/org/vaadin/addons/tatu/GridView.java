@@ -26,7 +26,7 @@ public class GridView extends Div {
         autoGrid.addListColumn("cars", Car.class,
                 Void -> new Car("Kia", "Ceed"), "brand", "model");
         autoGrid.addBeanColumn("license", License.class, "license", "licensor");
-        // Nothing else is needed, the editor and responsiveness is generated
+        // Nothing else is needed, the editor and responsiveness is generated   
         // automatically
 
         add(autoGrid);

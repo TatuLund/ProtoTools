@@ -34,6 +34,7 @@ public class Person extends AbstractEntity {
         weight = 70;
         dateOfBirth = LocalDateTime.now().minusYears(25);
 //        dateOfBirth = new Date();
+//        dateOfBirth = LocalDate.now().minusYears(25);
         cars = new ArrayList<>();
         cars.add(new Car("Ford", "Mondeo"));
         cars.add(new Car("Toyota", "Yaris"));

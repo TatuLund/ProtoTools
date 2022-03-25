@@ -1,6 +1,7 @@
 package org.vaadin.addons.tatu.prototools;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +28,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.RouteRegistry;
 import com.vaadin.flow.server.SessionRouteRegistry;
 import com.vaadin.flow.server.VaadinSession;
+import com.vaadin.flow.theme.lumo.Lumo;
 
 @CssImport("./styles.css")
 @NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
@@ -50,6 +52,12 @@ public class MenuLayout extends AppLayout {
         views.setText(menuTitle);
     }
 
+    public void setVariant(String variant) {
+        assert Arrays.asList(Lumo.DARK,Lumo.LIGHT).contains(variant);
+        getElement().getThemeList().removeAll(Arrays.asList(Lumo.DARK,Lumo.LIGHT));
+        getElement().getThemeList().add(variant);
+    }
+    
     private Component createHeaderContent() {
         DrawerToggle toggle = new DrawerToggle();
         toggle.addClassName("text-secondary");

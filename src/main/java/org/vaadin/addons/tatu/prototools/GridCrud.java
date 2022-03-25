@@ -20,7 +20,7 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
     }
 
     public GridCrud(Class<T> beanType, boolean autoBuild) {
-        super(beanType,autoBuild);
+        super(beanType, autoBuild);
         grid = new AutoGrid<>(beanType, autoBuild);
         grid.setMinHeight("200px");
         formPlus.setVisible(false);
@@ -47,7 +47,19 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
         form.addValueChangeListener(event -> {
             grid.getDataProvider().refreshItem(event.getValue());
         });
-        
+        // Add cursor up/down navi selection
+        grid.getElement()
+                .executeJs("this.addEventListener('keydown', function(e) {\r\n"
+                        + " let delta = 0;\r\n"
+                        + " if (e.key === 'ArrowUp') {\r\n" + " delta = -1;\r\n"
+                        + " } else if (e.key === 'ArrowDown') {\r\n"
+                        + " delta = 1;\r\n" + " }\r\n"
+                        + " if (this.selectedItems[0] && delta) {\r\n"
+                        + " const currentIndex = +this._cache.getCacheAndIndexByKey(this.selectedItems[0].key).scaledIndex;\r\n"
+                        + " const itemToSelect = this._cache.getItemForIndex(currentIndex + delta)\r\n"
+                        + " itemToSelect && this.$connector.doSelection([itemToSelect], true);\r\n"
+                        + " }\r\n" + "}.bind(this));");
+
         layout.add(grid, formPlus);
     }
 

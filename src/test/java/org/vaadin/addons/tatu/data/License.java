@@ -1,14 +1,18 @@
 package org.vaadin.addons.tatu.data;
 
-public class License extends AbstractEntity {
-    private String license = "Foo";
-    private String licensor = "Bar";
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
-    public String getLicense() {
+public class License extends AbstractEntity {
+    private BigDecimal license = new BigDecimal(332949143);
+    private String licensor = "Bar";
+    private LocalDate granted = LocalDate.now().minusYears(10);
+
+    public BigDecimal getLicense() {
         return license;
     }
 
-    public void setLicense(String license) {
+    public void setLicense(BigDecimal license) {
         this.license = license;
     }
 
@@ -18,6 +22,14 @@ public class License extends AbstractEntity {
 
     public void setLicensor(String licensor) {
         this.licensor = licensor;
+    }
+
+    public LocalDate getGranted() {
+        return granted;
+    }
+
+    public void setGranted(LocalDate granted) {
+        this.granted = granted;
     }
 
     @Override

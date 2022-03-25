@@ -293,7 +293,7 @@ public class AutoGrid<T> extends Grid<T> {
         hasValidation.setInvalid(handler.isError());
         if (handler.isError()) {
             if (hasValidation instanceof Focusable) {
-                Focusable focusable = (Focusable) hasValidation;
+                Focusable<?> focusable = (Focusable<?>) hasValidation;
                 focusable.focus();
             }
         }
