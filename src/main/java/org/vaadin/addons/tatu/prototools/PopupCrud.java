@@ -2,7 +2,6 @@ package org.vaadin.addons.tatu.prototools;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid.SelectionMode;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 
 public class PopupCrud<T> extends AbstractGridCrud<T> {
@@ -19,8 +18,7 @@ public class PopupCrud<T> extends AbstractGridCrud<T> {
         grid.setEditorDisabled(true);
         grid.setSelectionMode(SelectionMode.NONE);
 
-        H3 title = new H3(Utils.formatName(beanType.getSimpleName()));
-        dialog = new PopupEdit(title,formPlus);
+        dialog = new PopupEdit(Utils.formatName(beanType.getSimpleName()),formPlus);
         addEditColumn();
         form.addValueChangeListener(event -> {
             grid.getDataProvider().refreshItem(event.getValue());

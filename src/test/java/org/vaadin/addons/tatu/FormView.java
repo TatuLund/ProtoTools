@@ -8,6 +8,7 @@ import org.vaadin.addons.tatu.prototools.Paging;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Html;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.select.Select;
@@ -30,6 +31,7 @@ public class FormView extends Div {
                 Void -> new Car("Kia", "Ceed"), "brand", "model", "weight");
         autoForm.addBeanProperty("license", License.class, "license",
                 "licensor", "granted");
+        add(autoForm);
 
         // Form is a field, you can listen to value changes or bind it
         autoForm.addValueChangeListener(event -> {
@@ -40,8 +42,6 @@ public class FormView extends Div {
             dialog.add(form);
             dialog.open();
         });
-
-        add(autoForm);
     }
 
 }

@@ -1,5 +1,7 @@
 package org.vaadin.addons.tatu.prototools;
 
+import java.util.Optional;
+
 import org.vaadin.addons.tatu.GridLayout;
 import org.vaadin.addons.tatu.GridLayout.Align;
 import org.vaadin.addons.tatu.GridLayout.Content;
@@ -27,6 +29,15 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.lumo.LumoUtility;
+import com.vaadin.flow.theme.lumo.LumoUtility.BoxShadow;
+import com.vaadin.flow.theme.lumo.LumoUtility.Display;
+import com.vaadin.flow.theme.lumo.LumoUtility.Flex;
+import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
+import com.vaadin.flow.theme.lumo.LumoUtility.FontSize;
+import com.vaadin.flow.theme.lumo.LumoUtility.FontWeight;
+import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
+import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 public class Dashboard extends Composite<Div> {
 
@@ -53,7 +64,7 @@ public class Dashboard extends Composite<Div> {
                 }
             });
         });
-        gridLayout.addClassName("flex-grow");
+        gridLayout.addClassName(Flex.GROW);
         gridLayout.setHeightFull();
         gridLayout.setAlign(Align.STRETCH);
         gridLayout.setContent(Content.STRETCH);
@@ -63,14 +74,16 @@ public class Dashboard extends Composite<Div> {
         tools = new Div();
         tools.setHeight("100%");
         tools.setWidth("300px");
-        tools.addClassNames("flex","flex-col");
+        tools.addClassNames(Display.FLEX, FlexDirection.COLUMN);
         Span widgets = new Span("Add widgets");
-        widgets.addClassNames("text-l","m-m","font-semibold");
+        widgets.addClassNames(FontSize.LARGE, Margin.MEDIUM,
+                FontWeight.SEMIBOLD);
         Span update = new Span("Update widgets");
-        update.addClassNames("text-l","m-m","font-semibold");
-        tools.add(widgets,widgetGenerators,update,widgetUpdaters);
+        update.addClassNames(FontSize.LARGE, Margin.MEDIUM,
+                FontWeight.SEMIBOLD);
+        tools.add(widgets, widgetGenerators, update, widgetUpdaters);
 
-        layout.addClassNames("flex", "flex-row");
+        layout.addClassNames(Display.FLEX, FlexDirection.ROW);
         layout.add(gridLayout, tools);
         layout.setSizeFull();
     }
@@ -102,7 +115,7 @@ public class Dashboard extends Composite<Div> {
         });
         widgetUpdaters.add(widgetGenerator);
     }
-    
+
     public Widget addWidget(String title, Component content) {
         Widget widget = new Widget(title, content);
         gridLayout.add(widget);
@@ -195,7 +208,8 @@ public class Dashboard extends Composite<Div> {
             this.icon = icon;
             this.title = title;
             this.componentProvider = componentProvider;
-            gen.addClassNames("flex","gap-m","m-s","p-m","shadow-s");
+            gen.addClassNames(Display.FLEX, LumoUtility.Gap.MEDIUM,
+                    Margin.SMALL, Padding.MEDIUM, BoxShadow.SMALL);
             gen.add(icon, new Text(title));
         }
 
@@ -218,7 +232,7 @@ public class Dashboard extends Composite<Div> {
 
         public Widget(String title, Component content) {
             this.content = content;
-            widget.addClassName("shadow-xs");
+            widget.addClassName(BoxShadow.SMALL);
 
             DragSource<Div> dragSource = DragSource.create(widget);
             dragSource.setDraggable(true);
@@ -239,7 +253,8 @@ public class Dashboard extends Composite<Div> {
                     }
                     if (dragged instanceof WidgetUpdater) {
                         WidgetUpdater widgetUpdater = (WidgetUpdater) dragged;
-                        this.setWidgetContent(widgetUpdater.produce().getWidgetContent());
+                        this.setWidgetContent(
+                                widgetUpdater.produce().getWidgetContent());
                         return;
                     }
                     int indexDiv = gridLayout.indexOf(this);
@@ -256,7 +271,7 @@ public class Dashboard extends Composite<Div> {
             titleField.setValue(title);
             titleField.addThemeVariants(TextFieldVariant.LUMO_SMALL);
             header.add(titleField);
-            header.addClassNames("shadow-xs", "m-xs");
+            header.addClassNames(BoxShadow.XSMALL, Margin.XSMALL);
 
             MenuBar menu = new MenuBar();
             menu.setWidth("32px");
@@ -292,7 +307,7 @@ public class Dashboard extends Composite<Div> {
 
         public void setWidgetContent(Component content) {
             widget.removeAll();
-            widget.add(header,content);
+            widget.add(header, content);
             this.content = content;
         }
 

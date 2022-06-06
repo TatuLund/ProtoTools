@@ -19,6 +19,12 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.lumo.LumoUtility.Border;
+import com.vaadin.flow.theme.lumo.LumoUtility.BorderColor;
+import com.vaadin.flow.theme.lumo.LumoUtility.BoxShadow;
+import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
+import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
+import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @Tag("div")
 @CssImport("./styles.css")
@@ -61,7 +67,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         this.beanProvider = beanProvider;
         this.beanType = beanType;
         grid = new AutoGrid<>(beanType, autoBuild);
-        grid.addClassNames("p-s", "shadow-xs");
+        grid.addClassNames(Padding.SMALL, BoxShadow.XSMALL);
         grid.setResponsive(true);
         grid.setSelectionMode(SelectionMode.NONE);
 
@@ -74,7 +80,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
         });
 
         addButton = VaadinIcon.PLUS.create();
-        addButton.addClassName("m-s");
+        addButton.addClassName(Margin.SMALL);
         addButton.addClickListener(event -> {
             if (readOnly)
                 return;
@@ -106,7 +112,7 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
             setModelValue(defaultValue, false);
         }
 
-        error.addClassName("text-error");
+        error.addClassName(TextColor.ERROR);
         error.setVisible(false);
 
         add(grid, addButton, error);
@@ -223,9 +229,9 @@ public class ListEdit<T> extends AbstractField<ListEdit<T>, List<T>>
     public void setInvalid(boolean invalid) {
         this.invalid = invalid;
         if (invalid) {
-            grid.addClassNames("border", "border-error");
+            grid.addClassNames(Border.ALL, BorderColor.ERROR);
         } else {
-            grid.removeClassNames("border", "border-error");
+            grid.removeClassNames(Border.ALL, BorderColor.ERROR);
             error.setVisible(false);
         }
     }

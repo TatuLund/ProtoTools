@@ -12,11 +12,13 @@ import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
+import com.vaadin.flow.theme.lumo.LumoUtility;
+import com.vaadin.flow.theme.lumo.LumoUtility.Background;
+import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @Tag("div")
 @CssImport("./styles.css")
@@ -29,7 +31,6 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
     ListEdit<T> listEdit;
     private String text = "";
     private boolean invalid;
-    private H3 title;
 
     public PopupListEdit(Class<T> beanType,
             ValueProvider<Void, T> beanProvider) {
@@ -50,9 +51,8 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
         if (!(browser.isAndroid() || browser.isIPhone())) {
             listEdit.setWidth("calc(100vw - 90px)");
         }
-        title = new H3();
+        dialog = new PopupEdit("", listEdit);
         setLabel(Utils.formatName(beanType.getSimpleName()));
-        dialog = new PopupEdit(title,listEdit);
         button.setText("(" + defaultValue.size() + ")");
         button.setIcon(VaadinIcon.EDIT.create());
         button.addClickListener(event -> {
@@ -83,7 +83,7 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
         this.text = text;
         button.setText(text + " (" + getValue().size() + ")");
         button.setIcon(VaadinIcon.EDIT.create());
-        title.setText(text);
+        dialog.setHeaderTitle(text);
     }
 
     public void setColumns(String... propertyNames) {
@@ -109,9 +109,9 @@ public class PopupListEdit<T> extends AbstractField<PopupListEdit<T>, List<T>>
     public void setInvalid(boolean invalid) {
         this.invalid = true;
         if (invalid) {
-            button.addClassNames("bg-error", "text-error-contrast");
+            button.addClassNames(Background.ERROR, TextColor.ERROR_CONTRAST);
         } else {
-            button.removeClassNames("bg-error", "text-error-contrast");            
+            button.removeClassNames(Background.ERROR, TextColor.ERROR_CONTRAST);
         }
     }
 

@@ -19,6 +19,8 @@ import com.vaadin.flow.data.provider.InMemoryDataProvider;
 import com.vaadin.flow.data.provider.CallbackDataProvider.CountCallback;
 import com.vaadin.flow.data.provider.CallbackDataProvider.FetchCallback;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.theme.lumo.LumoUtility.Display;
+import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
 
 @CssImport("./styles.css")
 @NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
@@ -32,12 +34,12 @@ public class ComboCrud<T> extends AbstractCrud<T> {
     }
 
     public ComboCrud(Class<T> beanType, boolean autoBuild) {
-        super(beanType,autoBuild);
+        super(beanType, autoBuild);
         selector = new ComboBox<>();
         formPlus.setVisible(false);
         this.beanType = beanType;
 
-        layout.addClassNames("grid", "grid-cols-1", "gap-s");
+        layout.addClassNames(Display.GRID, "grid-cols-1", Gap.SMALL);
 
         selector.addValueChangeListener(event -> {
             T item = event.getValue();
@@ -53,7 +55,7 @@ public class ComboCrud<T> extends AbstractCrud<T> {
         });
         layout.add(selector, formPlus);
     }
-    
+
     @Override
     protected void addItem(T item) {
         selector.getListDataView().addItem(item);
@@ -67,8 +69,8 @@ public class ComboCrud<T> extends AbstractCrud<T> {
     @Override
     public void editItem(T item) {
         selector.setValue(item);
-//        form.setVisible(true);
-//        form.setValue(item);
+        // form.setVisible(true);
+        // form.setValue(item);
     }
 
     public ComboBoxListDataView<T> setItems(T... items) {
@@ -79,11 +81,13 @@ public class ComboCrud<T> extends AbstractCrud<T> {
         return selector.setItems(items);
     }
 
-    public ComboBoxLazyDataView<T> setItems(BackEndDataProvider<T, String> dataProvider) {
+    public ComboBoxLazyDataView<T> setItems(
+            BackEndDataProvider<T, String> dataProvider) {
         return selector.setItems(dataProvider);
     }
 
-    public ComboBoxLazyDataView<T> setItems(FetchCallback<T, String> fetchCallback) {
+    public ComboBoxLazyDataView<T> setItems(
+            FetchCallback<T, String> fetchCallback) {
         return selector.setItems(fetchCallback);
     }
 
@@ -95,12 +99,14 @@ public class ComboCrud<T> extends AbstractCrud<T> {
         return selector.setItems(dataProvider);
     }
 
-    public ComboBoxLazyDataView<T> setItems(FetchCallback<T, String> fetchCallback, CountCallback<T, String> countCallback) {
+    public ComboBoxLazyDataView<T> setItems(
+            FetchCallback<T, String> fetchCallback,
+            CountCallback<T, String> countCallback) {
         return selector.setItems(fetchCallback, countCallback);
     }
-    
+
     public void setComboProperties(String... properties) {
-        List<ValueProvider<T, ?>> getters = new  ArrayList<>();
+        List<ValueProvider<T, ?>> getters = new ArrayList<>();
         PropertySet<T> propertySet = BeanPropertySet.get(beanType);
         for (String property : properties) {
             propertySet.getProperty(property).ifPresent(prop -> {
@@ -115,7 +121,7 @@ public class ComboCrud<T> extends AbstractCrud<T> {
                 if (first.get()) {
                     label.append(getter.apply(item).toString());
                 } else {
-                    label.append(" | "+getter.apply(item));
+                    label.append(" | " + getter.apply(item));
                 }
                 first.set(false);
             });

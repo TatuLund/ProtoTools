@@ -11,6 +11,8 @@ import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.theme.lumo.LumoUtility.Background;
+import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @Tag(Tag.DIV)
 @CssImport("./styles.css")
@@ -23,7 +25,6 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
     Form<T> form;
     private String text = "";
     private boolean invalid;
-    private H3 title;
 
     public PopupForm(Class<T> beanType, ValueProvider<Void, T> beanProvider) {
         this(null, beanType, true);
@@ -36,9 +37,8 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
     public PopupForm(T defaultValue, Class<T> beanType, boolean autoBuild) {
         super(defaultValue);
         form = new Form<>(defaultValue, beanType, autoBuild);
-        title = new H3();
+        dialog = new PopupEdit("",form);
         setLabel(Utils.formatName(beanType.getSimpleName()));
-        dialog = new PopupEdit(title,form);
         button.setIcon(VaadinIcon.EDIT.create());
         button.addClickListener(event -> {
             dialog.open();
@@ -68,7 +68,7 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
         this.text = text;
         button.setText(text);
         button.setIcon(VaadinIcon.EDIT.create());
-        title.setText(text);
+        dialog.setHeaderTitle(text);
     }
 
     public void setProperties(String... propertyNames) {
@@ -89,9 +89,9 @@ public class PopupForm<T> extends AbstractField<PopupForm<T>, T>
     public void setInvalid(boolean invalid) {
         this.invalid = true;
         if (invalid) {
-            button.addClassNames("bg-error", "text-error-contrast");
+            button.addClassNames(Background.ERROR, TextColor.ERROR_CONTRAST);
         } else {
-            button.removeClassNames("bg-error", "text-error-contrast");            
+            button.removeClassNames(Background.ERROR, TextColor.ERROR_CONTRAST);
         }
     }
 

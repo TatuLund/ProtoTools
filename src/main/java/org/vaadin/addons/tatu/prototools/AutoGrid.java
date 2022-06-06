@@ -98,7 +98,7 @@ public class AutoGrid<T> extends Grid<T> {
 
         form = new Form<>(null, beanType, autoBuild);
 //        form.setProperties(propertyNames);
-        dialog = new PopupEdit(new H3(Utils.formatName(beanType.getSimpleName())),form);
+        dialog = new PopupEdit(Utils.formatName(beanType.getSimpleName()),form);
         form.addValueChangeListener(e -> {
             getDataProvider().refreshItem(e.getValue());
         });

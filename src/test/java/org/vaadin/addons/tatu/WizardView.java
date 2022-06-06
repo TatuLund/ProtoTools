@@ -40,30 +40,6 @@ public class WizardView extends Div {
         wizard.build();
 
         add(wizard);
-
-        MyCombo combo = new MyCombo();
-        List<String> items = new LinkedList<>();
-        IntStream.range(1, 50).forEach(value -> {
-            items.add("test " + value);
-        });
-        combo.setItems(items);
-        combo.addValueChangeListener(e -> {
-            Notification.show(String.format("event: %s, combo: %s",
-                    e.getValue(), combo.getValue()));
-        });
-//        combo.getStyle().set("--vaadin-combo-box-overlay-max-height","800px");
-        combo.setPageSize(100);
-
-        add(combo);
-    }
-
-    class MyCombo extends ComboBox<String> {
-
-        @Override
-        public String getEmptyValue() {
-            return "";
-        }
-
     }
 
 }

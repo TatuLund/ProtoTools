@@ -3,7 +3,6 @@ package org.vaadin.addons.tatu.prototools;
 import java.time.ZoneId;
 import java.util.Date;
 
-import com.vaadin.componentfactory.EnhancedFormLayout;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Focusable;
@@ -29,6 +28,11 @@ import com.vaadin.flow.data.binder.PropertySet;
 import com.vaadin.flow.data.converter.LocalDateTimeToDateConverter;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.lumo.LumoUtility;
+import com.vaadin.flow.theme.lumo.LumoUtility.Border;
+import com.vaadin.flow.theme.lumo.LumoUtility.BorderColor;
+import com.vaadin.flow.theme.lumo.LumoUtility.BoxShadow;
+import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @Tag("div")
 @CssImport("./styles.css")
@@ -37,7 +41,7 @@ import com.vaadin.flow.shared.Registration;
 public class Form<T> extends AbstractField<Form<T>, T>
         implements HasSize, HasValidation, HasComponents {
 
-    private EnhancedFormLayout form;
+    private FormLayout form;
     private BeanValidationBinder<T> binder;
     private Class<T> beanType;
     private T bean;
@@ -54,9 +58,8 @@ public class Form<T> extends AbstractField<Form<T>, T>
 
         this.beanType = beanType;
         this.bean = defaultValue;
-        form = new EnhancedFormLayout();
-        form.setStickyIndicator(true);
-        form.addClassNames("p-s", "shadow-xs");
+        form = new FormLayout();
+        form.addClassNames(Padding.SMALL, BoxShadow.XSMALL);
 
         if (autoBuild) {
             binder = new BeanValidationBinder<>(beanType);
@@ -79,7 +82,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
             valueChangeRegistration.remove();
         valueChangeRegistration = binder.addValueChangeListener(event -> {
             if (binder.isValid()) {
-//                setModelValue(binder.getBean(), true);
+                // setModelValue(binder.getBean(), true);
                 fireEvent(createValueChange(binder.getBean(), true));
             }
         });
@@ -183,7 +186,8 @@ public class Form<T> extends AbstractField<Form<T>, T>
                 binder.forField(comp)
                         .withConverter(new StringToEnumConverter(e))
                         .withValidationStatusHandler(
-                                event -> handleValidationStatus(hasValue, event))
+                                event -> handleValidationStatus(hasValue,
+                                        event))
                         .bind(property.getName());
             } else if (property.getType().isAssignableFrom(Date.class)) {
                 DateTimePicker comp = (DateTimePicker) component;
@@ -239,7 +243,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
                     HasValidation hasValidation = (HasValidation) hasValue;
                     hasValidation.setInvalid(false);
                     hasValidation.setErrorMessage("");
-                }                
+                }
             }
         });
     }
@@ -263,9 +267,9 @@ public class Form<T> extends AbstractField<Form<T>, T>
     public void setInvalid(boolean invalid) {
         this.invalid = invalid;
         if (invalid) {
-            form.addClassNames("border", "border-error");
+            form.addClassNames(Border.ALL, BorderColor.ERROR);
         } else {
-            form.removeClassNames("border", "border-error");
+            form.removeClassNames(Border.ALL, BorderColor.ERROR);
         }
     }
 

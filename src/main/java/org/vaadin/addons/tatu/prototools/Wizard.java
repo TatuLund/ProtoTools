@@ -12,6 +12,10 @@ import com.vaadin.flow.component.HasValue;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.theme.lumo.LumoUtility.Display;
+import com.vaadin.flow.theme.lumo.LumoUtility.Flex;
+import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
+import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
 public class Wizard extends Composite<Div> {
 
@@ -86,9 +90,7 @@ public class Wizard extends Composite<Div> {
 
     @Override
     protected Div initContent() {
-        layout.getStyle().set("display", "flex");
-        layout.getStyle().set("flex-direction", "column");
-        layout.getStyle().set("width", "100%");
+        layout.addClassNames(Display.FLEX, FlexDirection.COLUMN, Width.FULL);
         return layout;
     }
 
