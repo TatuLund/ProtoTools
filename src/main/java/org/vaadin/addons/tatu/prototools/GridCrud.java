@@ -68,8 +68,11 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
         formPlus.setVisible(true);
         form.setValue(item);
         if (wide) {
-            layout.removeClassName("grid-cols-2");
+            layout.removeClassName("grid-cols-1");
             layout.addClassName("grid-cols-3");
+        } else {
+            layout.addClassName("grid-cols-1");
+            layout.removeClassName("grid-cols-3");
         }
         grid.setHeight("100%");
     }
@@ -79,8 +82,10 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
             wide = false;
             if (formPlus.isVisible()) {
                 layout.removeClassName("grid-cols-3");
+                layout.removeClassName("grid-cols-2");
                 layout.addClassName("grid-cols-1");
             } else {
+                layout.removeClassName("grid-cols-3");
                 layout.removeClassName("grid-cols-2");
                 layout.addClassName("grid-cols-1");
             }
@@ -90,7 +95,7 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
             if (formPlus.isVisible()) {
                 layout.addClassName("grid-cols-3");
             } else {
-                layout.addClassName("grid-cols-2");
+                layout.addClassName("grid-cols-1");
             }
         }
     }

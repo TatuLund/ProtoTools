@@ -21,14 +21,15 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.BeanPropertySet;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
+import com.vaadin.flow.data.binder.Binder.BindingBuilder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.BindingValidationStatus;
 import com.vaadin.flow.data.binder.PropertyDefinition;
 import com.vaadin.flow.data.binder.PropertySet;
 import com.vaadin.flow.data.converter.LocalDateTimeToDateConverter;
+import com.vaadin.flow.data.validator.BeanValidator;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.Border;
 import com.vaadin.flow.theme.lumo.LumoUtility.BorderColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxShadow;
@@ -194,24 +195,34 @@ public class Form<T> extends AbstractField<Form<T>, T>
                 binder.forField(comp)
                         .withConverter(new LocalDateTimeToDateConverter(
                                 ZoneId.systemDefault()))
+                        .withValidator(new BeanValidator(beanType,property.getName()))
+                        .withValidator(value -> !comp.isInvalid(),
+                                "Date format not valid")
                         .withValidationStatusHandler(
                                 event -> handleValidationStatus(hasValue,
                                         event))
                         .bind(property.getName());
             } else {
+                BindingBuilder<T, ?> bindingBuilder = binder.forField(hasValue)
+                        .withValidationStatusHandler(
+                                event -> handleValidationStatus(hasValue,
+                                        event));
+                // .bind(property.getName());
                 if (component instanceof DatePicker
                         || component instanceof TimePicker) {
-                    component.getElement()
-                            .executeJs("this.$.input.autoselect=true;");
+                    HasValidation comp = (HasValidation) component;
+                    bindingBuilder.withValidator(new BeanValidator(beanType,property.getName()));
+                    bindingBuilder.withValidator(value -> !comp.isInvalid(),
+                            "Date format not valid");
                 } else if (component instanceof DateTimePicker) {
                     component.getElement().getThemeList()
                             .add("picker-responsive");
-                    component.getElement().executeJs(
-                            "this.$.dateSlot.getElementsByTagName('vaadin-date-time-picker-date-picker')[0].$.input.autoselect=true;");
+                    DateTimePicker comp = (DateTimePicker) component;
+                    bindingBuilder.withValidator(new BeanValidator(beanType,property.getName()));
+                    bindingBuilder.withValidator(value -> !comp.isInvalid(),
+                            "Date format not valid");
                 }
-                binder.forField(hasValue).withValidationStatusHandler(
-                        event -> handleValidationStatus(hasValue, event))
-                        .bind(property.getName());
+                bindingBuilder.bind(property.getName());
             }
         }
 

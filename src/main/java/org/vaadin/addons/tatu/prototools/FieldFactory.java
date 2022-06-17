@@ -9,13 +9,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Focusable;
-import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.textfield.BigDecimalField;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.NumberField;
@@ -37,20 +34,33 @@ public class FieldFactory {
         } else if (propertyType.isAssignableFrom(BigDecimal.class)) {
             component = new BigDecimalField();
             clientValidationWorkaround(component);
-            component.getElement().executeJs("this.inputElement.addEventListener('change', () => { this.invalid = this.validate(); })");
             ((BigDecimalField) component).setAutoselect(true);
         } else if (propertyType.isAssignableFrom(Double.class)) {
             component = new NumberField();
             ((NumberField) component).setAutoselect(true);
         } else if (propertyType.isAssignableFrom(LocalDate.class)) {
-            component = new DatePicker();
+            DatePicker comp = new DatePicker();
+            comp.setAutoOpen(false);
+            component = comp;
+            component.getElement().executeJs("this.autoselect=true;");
             clientValidationWorkaround(component);
         } else if (propertyType.isAssignableFrom(LocalTime.class)) {
-            component = new TimePicker();
-            component.getElement().executeJs("this.inputElement.addEventListener('change', () => { this.invalid = this.validate(); })");
+            TimePicker comp = new TimePicker();
+            comp.setAutoOpen(false);
+            component = comp;
+            component.getElement().executeJs("this.autoselect=true;");
+            clientValidationWorkaround(component);
         } else if (propertyType.isAssignableFrom(LocalDateTime.class)
                 || propertyType.isAssignableFrom(Date.class)) {
-            component = new DateTimePicker();
+            DateTimePicker comp = new DateTimePicker();
+            comp.setAutoOpen(false);
+            component = comp;
+            component.getElement().executeJs(
+                    "this.__datePicker.autoselect=true;this.__timePicker.autoselect=true;");
+            component.getElement().executeJs(
+                    "this.__datePicker.addEventListener('blur', () => { if (!this.invalid) { this.invalid=!this.validate(); } });"
+                    + "this.__timePicker.addEventListener('blur', () => { if (!this.invalid) { this.invalid=!this.validate(); } });"
+                    + "this.addEventListener('value-changed', () => this.invalid = !this.validate())");
             component.getElement().getThemeList().add("picker-fixes");
         } else if (propertyType.isAssignableFrom(Boolean.class)) {
             component = new Checkbox();
@@ -66,20 +76,9 @@ public class FieldFactory {
     }
 
     private static void clientValidationWorkaround(Component component) {
-        if (component instanceof Focusable
-                && component instanceof HasValidation) {
-            Focusable<?> focusable = (Focusable<?>) component;
-            HasValidation hasValidation = (HasValidation) component;
-            focusable.addBlurListener(event -> {
-                component.getElement().executeJs("return this.validate();")
-                        .then(value -> {
-                            if (value.toJson() != null) {
-                                hasValidation.setInvalid(
-                                        !value.toJson().equals("true"));
-                            }
-                        });
-            });
-        }
+        component.getElement().executeJs(
+                "this.inputElement.addEventListener('blur', () => { if (!this.invalid) { this.invalid=!this.validate(); } });"
+                + "this.inputElement.addEventListener('change', () => this.invalid=!this.validate())");
     }
 
     private static ComboBox<String> createEnumCombo(
