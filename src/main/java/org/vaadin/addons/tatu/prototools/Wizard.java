@@ -9,6 +9,8 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasValidation;
 import com.vaadin.flow.component.HasValue;
+import com.vaadin.flow.component.dependency.JsModule;
+import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.function.ValueProvider;
@@ -17,6 +19,9 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Flex;
 import com.vaadin.flow.theme.lumo.LumoUtility.FlexDirection;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
+@NpmPackage(value = "@vaadin/vaadin-lumo-styles", version = "23.2.0-alpha2")
+@JsModule("@vaadin/vaadin-lumo-styles/utility.js")
+@JsModule("./lumo-utility.ts")
 public class Wizard extends Composite<Div> {
 
     Paging paging;

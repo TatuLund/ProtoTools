@@ -15,6 +15,7 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.dependency.CssImport;
+import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Label;
@@ -36,8 +37,9 @@ import com.vaadin.flow.theme.lumo.LumoUtility.BoxShadow;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
 
 @Tag("div")
-@CssImport("./styles.css")
-@NpmPackage(value = "lumo-css-framework", version = "^4.0.10")
+@NpmPackage(value = "@vaadin/vaadin-lumo-styles", version = "23.2.0-alpha2")
+@JsModule("@vaadin/vaadin-lumo-styles/utility.js")
+@JsModule("./lumo-utility.ts")
 @CssImport(value = "./picker-responsive.css", themeFor = "vaadin-date-time-picker")
 public class Form<T> extends AbstractField<Form<T>, T>
         implements HasSize, HasValidation, HasComponents {
