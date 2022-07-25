@@ -1,0 +1,7 @@
+[slot='drawer'] nav a[highlight] {
+  color: var(--lumo-primary-text-color);
+}
+
+[slot='drawer'] nav a[highlight]::before {
+  background-color: var(--lumo-primary-color-10pct);
+}

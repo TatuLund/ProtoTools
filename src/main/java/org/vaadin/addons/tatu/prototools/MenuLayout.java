@@ -24,6 +24,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.textfield.TextFieldVariant;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouteData;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.RouteRegistry;
@@ -53,6 +54,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.Whitespace;
 import com.vaadin.flow.theme.lumo.LumoUtility.Width;
 
+@CssImport("./menu-layout.css")
 @NpmPackage(value = "@vaadin/vaadin-lumo-styles", version = "23.2.0-alpha2")
 @JsModule("@vaadin/vaadin-lumo-styles/utility.js")
 @JsModule("./lumo-utility.ts")
@@ -182,10 +184,10 @@ public class MenuLayout extends AppLayout {
                 });
             }
         });
-        link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL,
-                Padding.SMALL, FontWeight.MEDIUM, AlignItems.BASELINE,
-                FontSize.SMALL, Gap.SMALL, Position.RELATIVE,
-                TextColor.SECONDARY, Whitespace.NOWRAP);
+        link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL,
+                FontWeight.MEDIUM, AlignItems.BASELINE, FontSize.SMALL,
+                Gap.SMALL, Position.RELATIVE, TextColor.SECONDARY,
+                Whitespace.NOWRAP);
         field.setSuffixComponent(icon);
         link.add(field);
         return link;
@@ -194,6 +196,13 @@ public class MenuLayout extends AppLayout {
     private static RouterLink createLink(String titleString,
             Class<? extends Component> view) {
         RouterLink link = new RouterLink();
+        link.setHighlightCondition((rl, event) -> {
+            Class<? extends Component> targetView = RouteConfiguration
+                    .forSessionScope().getRoute(event.getLocation().getPath())
+                    .get();
+            return targetView.equals(view);
+        });
+
         link.addClassNames(Display.FLEX, Margin.Horizontal.SMALL, Padding.SMALL,
                 Position.RELATIVE, TextColor.SECONDARY);
         link.setRoute(view);

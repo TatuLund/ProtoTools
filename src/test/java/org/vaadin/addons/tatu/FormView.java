@@ -16,9 +16,11 @@ import com.vaadin.flow.data.provider.DataProvider;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.router.RouteAlias;
 
 @PageTitle("Form")
 @Route(value = "form", layout = MainLayout.class)
+@RouteAlias(value = "", layout = MainLayout.class)
 public class FormView extends Div {
 
     public FormView() {

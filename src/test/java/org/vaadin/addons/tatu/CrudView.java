@@ -1,5 +1,9 @@
 package org.vaadin.addons.tatu;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.vaadin.addons.tatu.data.Car;
 import org.vaadin.addons.tatu.data.License;
 import org.vaadin.addons.tatu.data.Person;
@@ -19,7 +23,8 @@ public class CrudView extends Div {
 
     public CrudView() {
         GridCrud<Person> crud = new GridCrud<>(Person.class, false);
-        crud.setItems(new Person(), new Person(), new Person());
+        List<Person> items = Arrays.asList(new Person(), new Person(), new Person());
+        crud.setItems(items);
         // Show three properties in Grid
         crud.setGridProperties("firstName", "lastName", "gender");
         // Show all needed properties in the form
