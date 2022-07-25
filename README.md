@@ -60,6 +60,13 @@ Simple Grid + Form as popup dialog CRUD view.
 
 ![PopupCrud](https://github.com/TatuLund/ProtoTools/blob/master/PopupCrud.jpg?raw=true)
 
+### Dashboard
+
+Rudimentary Dashboard component with drag and drop support. New widgets can be added and widgets can be replaced (e.g. for content / data update).
+
+### Wizard
+Wizard aka Stepper type component for splitting complex forms to multiple paged sub-forms.
+
 ### MenuLayout
 
 Component extending AppLayout with menu automatically generated from Route registry.
