@@ -6,7 +6,7 @@
 
 	<groupId>org.vaadin.addons.tatu</groupId>
 	<artifactId>prototools</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<name>ProtoTools</name>
 	<description>ProtoTools is mini framework of RAD components</description>
 
@@ -130,7 +130,7 @@
 		<dependency>
 			<groupId>org.vaadin.addons.tatu</groupId>
 			<artifactId>lumogridlayout</artifactId>
-			<version>1.2.0</version>
+			<version>1.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>io.github.bonigarcia</groupId>

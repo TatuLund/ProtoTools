@@ -2,11 +2,8 @@ package org.vaadin.addons.tatu;
 
 import org.vaadin.addons.tatu.prototools.MenuLayout;
 
-import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.page.AppShellConfigurator;
-import com.vaadin.flow.theme.lumo.Lumo;
 
 @CssImport("./shared-styles.css")
 public class MainLayout extends MenuLayout implements AppShellConfigurator {
