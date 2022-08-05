@@ -1,14 +1,11 @@
 package org.vaadin.addons.tatu.prototools;
 
-import java.util.Optional;
-
 import org.vaadin.addons.tatu.GridLayout;
 import org.vaadin.addons.tatu.GridLayout.Align;
 import org.vaadin.addons.tatu.GridLayout.Content;
 import org.vaadin.addons.tatu.GridLayout.Gap;
 import org.vaadin.addons.tatu.GridLayout.Justify;
 import org.vaadin.addons.tatu.GridLayout.Orientation;
-import org.vaadin.addons.tatu.prototools.AbstractCrud.ItemRemoveEvent;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.ComponentEvent;

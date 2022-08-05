@@ -9,7 +9,6 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.combobox.dataview.ComboBoxDataView;
 import com.vaadin.flow.component.combobox.dataview.ComboBoxLazyDataView;
 import com.vaadin.flow.component.combobox.dataview.ComboBoxListDataView;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.data.binder.BeanPropertySet;
@@ -20,8 +19,10 @@ import com.vaadin.flow.data.provider.InMemoryDataProvider;
 import com.vaadin.flow.data.provider.CallbackDataProvider.CountCallback;
 import com.vaadin.flow.data.provider.CallbackDataProvider.FetchCallback;
 import com.vaadin.flow.function.ValueProvider;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import com.vaadin.flow.theme.lumo.LumoUtility.Display;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+import com.vaadin.flow.theme.lumo.LumoUtility.Grid;
 
 @NpmPackage(value = "@vaadin/vaadin-lumo-styles", version = "23.2.0-alpha2")
 @JsModule("@vaadin/vaadin-lumo-styles/utility.js")
@@ -41,7 +42,7 @@ public class ComboCrud<T> extends AbstractCrud<T> {
         formPlus.setVisible(false);
         this.beanType = beanType;
 
-        layout.addClassNames(Display.GRID, "grid-cols-1", Gap.SMALL);
+        layout.addClassNames(Display.GRID, Grid.Column.COLUMNS_1, Gap.SMALL);
 
         selector.addValueChangeListener(event -> {
             T item = event.getValue();
@@ -71,8 +72,6 @@ public class ComboCrud<T> extends AbstractCrud<T> {
     @Override
     public void editItem(T item) {
         selector.setValue(item);
-        // form.setVisible(true);
-        // form.setValue(item);
     }
 
     public ComboBoxListDataView<T> setItems(T... items) {

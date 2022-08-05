@@ -1,9 +1,5 @@
 package org.vaadin.addons.tatu.prototools;
 
-import java.util.WeakHashMap;
-
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.ComponentEvent;
 import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
@@ -12,8 +8,10 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
 
-public abstract class AbstractCrud<T> extends Composite<Div> implements HasSize {
+public abstract class AbstractCrud<T> extends Composite<Div>
+        implements HasSize {
 
     Form<T> form;
     Div layout = new Div();
@@ -22,13 +20,13 @@ public abstract class AbstractCrud<T> extends Composite<Div> implements HasSize 
     private Icon addButton;
     private Icon deleteButton;
     private boolean readOnly;
-    
+
     public AbstractCrud(Class<T> beanType, boolean autoBuild) {
         form = new Form<>(null, beanType, autoBuild);
         formPlus = new Div();
 
         addButton = VaadinIcon.PLUS.create();
-        addButton.addClassName("m-s");
+        addButton.addClassName(Margin.SMALL);
         addButton.addClickListener(event -> {
             T newItem = null;
             if (beanProvider != null) {
@@ -56,7 +54,7 @@ public abstract class AbstractCrud<T> extends Composite<Div> implements HasSize 
                 removeItem(item);
             } catch (IllegalStateException e) {
                 fireEvent(new ItemRemoveEvent(this, true, item));
-            }            
+            }
         });
 
         formPlus.add(form, addButton, deleteButton);
@@ -64,9 +62,9 @@ public abstract class AbstractCrud<T> extends Composite<Div> implements HasSize 
 
     protected abstract void addItem(T newItem);
 
-    protected abstract void removeItem(T item); 
+    protected abstract void removeItem(T item);
 
-    public abstract void editItem(T item); 
+    public abstract void editItem(T item);
 
     public void setFormProperties(String... properties) {
         form.setProperties(properties);
@@ -122,37 +120,9 @@ public abstract class AbstractCrud<T> extends Composite<Div> implements HasSize 
         return addListener(ItemRemoveEvent.class, listener);
     }
 
-    public static class ItemRemoveEvent<T> extends ComponentEvent<AbstractCrud<T>> {
-        private final T item;
-
-        public ItemRemoveEvent(AbstractCrud<T> source, boolean fromClient,
-                T item) {
-            super(source, fromClient);
-            this.item = item;
-        }
-
-        public T getItem() {
-            return item;
-        }
-    }
-
     public Registration addNewItemHandler(
             ComponentEventListener<NewItemEvent> listener) {
         return addListener(NewItemEvent.class, listener);
-    }
-
-    public static class NewItemEvent<T> extends ComponentEvent<AbstractCrud<T>> {
-        private final T item;
-
-        public NewItemEvent(AbstractCrud<T> source, boolean fromClient,
-                T item) {
-            super(source, fromClient);
-            this.item = item;
-        }
-
-        public T getItem() {
-            return item;
-        }
     }
 
 }

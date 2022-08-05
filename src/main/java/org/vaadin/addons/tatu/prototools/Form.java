@@ -35,6 +35,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility.Border;
 import com.vaadin.flow.theme.lumo.LumoUtility.BorderColor;
 import com.vaadin.flow.theme.lumo.LumoUtility.BoxShadow;
 import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
+import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @Tag("div")
 @NpmPackage(value = "@vaadin/vaadin-lumo-styles", version = "23.2.0-alpha2")
@@ -74,7 +75,7 @@ public class Form<T> extends AbstractField<Form<T>, T>
             binder.setBean(bean);
         }
 
-        error.addClassName("text-error");
+        error.addClassName(TextColor.ERROR);
         error.setVisible(false);
 
         add(form, error);

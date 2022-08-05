@@ -20,7 +20,6 @@ import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
@@ -35,6 +34,13 @@ import com.vaadin.flow.data.converter.LocalDateTimeToDateConverter;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.function.ValueProvider;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.lumo.LumoUtility;
+import com.vaadin.flow.theme.lumo.LumoUtility.BoxShadow;
+import com.vaadin.flow.theme.lumo.LumoUtility.Display;
+import com.vaadin.flow.theme.lumo.LumoUtility.FontSize;
+import com.vaadin.flow.theme.lumo.LumoUtility.Margin;
+import com.vaadin.flow.theme.lumo.LumoUtility.Padding;
+import com.vaadin.flow.theme.lumo.LumoUtility.TextColor;
 
 @NpmPackage(value = "@vaadin/vaadin-lumo-styles", version = "23.2.0-alpha2")
 @JsModule("@vaadin/vaadin-lumo-styles/utility.js")
@@ -52,7 +58,7 @@ public class AutoGrid<T> extends Grid<T> {
     private boolean editorDisabled;
     private PopupEdit dialog;
     private Form<T> form;
-    
+
     public AutoGrid(Class<T> beanType) {
         this(beanType, true);
     }
@@ -99,8 +105,9 @@ public class AutoGrid<T> extends Grid<T> {
         }));
 
         form = new Form<>(null, beanType, autoBuild);
-//        form.setProperties(propertyNames);
-        dialog = new PopupEdit(Utils.formatName(beanType.getSimpleName()),form);
+        // form.setProperties(propertyNames);
+        dialog = new PopupEdit(Utils.formatName(beanType.getSimpleName()),
+                form);
         form.addValueChangeListener(e -> {
             getDataProvider().refreshItem(e.getValue());
         });
@@ -149,7 +156,8 @@ public class AutoGrid<T> extends Grid<T> {
     private void createCompactColumn(String... propertyNames) {
         addComponentColumn(item -> {
             Div div = new Div();
-            div.addClassNames("grid", "grid-cols-2", "shadow-m", "p-s");
+            div.addClassNames(Display.GRID, LumoUtility.Grid.Column.COLUMNS_2,
+                    BoxShadow.MEDIUM, Padding.SMALL);
             Stream.of(propertyNames).limit(4).forEach(propName -> {
                 PropertyDefinition<T, ?> property = propertySet
                         .getProperty(propName).get();
@@ -157,14 +165,14 @@ public class AutoGrid<T> extends Grid<T> {
                 String valueString = (valueObj != null) ? valueObj.toString()
                         : "";
                 Label name = new Label(Utils.formatName(propName));
-                name.addClassName("text-secondary");
+                name.addClassName(TextColor.SECONDARY);
                 Span value = new Span(valueString);
                 div.add(name, value);
             });
 
             Icon edit = VaadinIcon.EDIT.create();
-            edit.addClassNames("col-span-2", "text-xs", "text-primary",
-                    "ml-auto");
+            edit.addClassNames(LumoUtility.Grid.Column.COLUMN_SPAN_2,
+                    FontSize.XSMALL, TextColor.PRIMARY, Margin.Left.AUTO);
 
             edit.addClickListener(event -> {
                 form.setValue(item);
@@ -209,7 +217,8 @@ public class AutoGrid<T> extends Grid<T> {
                     .bind(property);
             listEdit.setLabel(name);
         });
-        form.addListProperty(property, listBeanType, listBeanProvider, autoCreate, listProperties);
+        form.addListProperty(property, listBeanType, listBeanProvider,
+                autoCreate, listProperties);
     }
 
     public void addBeanColumn(String property, Class listBeanType) {
@@ -232,7 +241,8 @@ public class AutoGrid<T> extends Grid<T> {
             configureComponent(prop, form);
             form.setLabel(Utils.formatName(prop.getName()));
         });
-        form.addBeanProperty(property, beanBeanType, autoCreate, beanProperties);
+        form.addBeanProperty(property, beanBeanType, autoCreate,
+                beanProperties);
     }
 
     private void configureComponent(PropertyDefinition<T, ?> property,

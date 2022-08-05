@@ -4,10 +4,12 @@ import java.util.Arrays;
 
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.DetachEvent;
-import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.theme.lumo.LumoUtility.Display;
+import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+import com.vaadin.flow.theme.lumo.LumoUtility.Grid.Column;
 
 @NpmPackage(value = "@vaadin/vaadin-lumo-styles", version = "23.2.0-alpha2")
 @JsModule("@vaadin/vaadin-lumo-styles/utility.js")
@@ -27,7 +29,7 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
         grid.setMinHeight("200px");
         formPlus.setVisible(false);
 
-        layout.addClassNames("grid", "grid-cols-2", "gap-s");
+        layout.addClassNames(Display.GRID, Column.COLUMNS_2, Gap.SMALL);
         // layout.setSizeFull();
 
         grid.getElement().getClassList()
@@ -40,8 +42,8 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
             }, () -> {
                 formPlus.setVisible(false);
                 if (wide) {
-                    layout.removeClassName("grid-cols-3");
-                    layout.addClassName("grid-cols-2");
+                    layout.removeClassName(Column.COLUMNS_3);
+                    layout.addClassName(Column.COLUMNS_2);
                 }
                 grid.setSizeUndefined();
             });
@@ -70,11 +72,11 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
         formPlus.setVisible(true);
         form.setValue(item);
         if (wide) {
-            layout.removeClassName("grid-cols-1");
-            layout.addClassName("grid-cols-3");
+            layout.removeClassName(Column.COLUMNS_1);
+            layout.addClassName(Column.COLUMNS_3);
         } else {
-            layout.addClassName("grid-cols-1");
-            layout.removeClassName("grid-cols-3");
+            layout.addClassName(Column.COLUMNS_1);
+            layout.removeClassName(Column.COLUMNS_3);
         }
         grid.setHeight("100%");
     }
@@ -83,21 +85,21 @@ public class GridCrud<T> extends AbstractGridCrud<T> {
         if (width < 900) {
             wide = false;
             if (formPlus.isVisible()) {
-                layout.removeClassName("grid-cols-3");
-                layout.removeClassName("grid-cols-2");
-                layout.addClassName("grid-cols-1");
+                layout.removeClassName(Column.COLUMNS_3);
+                layout.removeClassName(Column.COLUMNS_2);
+                layout.addClassName(Column.COLUMNS_1);
             } else {
-                layout.removeClassName("grid-cols-3");
-                layout.removeClassName("grid-cols-2");
-                layout.addClassName("grid-cols-1");
+                layout.removeClassName(Column.COLUMNS_3);
+                layout.removeClassName(Column.COLUMNS_2);
+                layout.addClassName(Column.COLUMNS_1);
             }
         } else {
             wide = true;
-            layout.removeClassName("grid-cols-1");
+            layout.removeClassName(Column.COLUMNS_1);
             if (formPlus.isVisible()) {
-                layout.addClassName("grid-cols-3");
+                layout.addClassName(Column.COLUMNS_3);
             } else {
-                layout.addClassName("grid-cols-1");
+                layout.addClassName(Column.COLUMNS_1);
             }
         }
     }
