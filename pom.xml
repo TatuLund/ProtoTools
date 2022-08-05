@@ -6,7 +6,7 @@
 
 	<groupId>org.vaadin.addons.tatu</groupId>
 	<artifactId>prototools</artifactId>
-	<version>1.2.1</version>
+	<version>1.2.2</version>
 	<name>ProtoTools</name>
 	<description>ProtoTools is mini framework of RAD components</description>
 

@@ -122,7 +122,7 @@ public abstract class AbstractCrud<T> extends Composite<Div> implements HasSize 
         return addListener(ItemRemoveEvent.class, listener);
     }
 
-    public class ItemRemoveEvent<T> extends ComponentEvent<AbstractCrud<T>> {
+    public static class ItemRemoveEvent<T> extends ComponentEvent<AbstractCrud<T>> {
         private final T item;
 
         public ItemRemoveEvent(AbstractCrud<T> source, boolean fromClient,
@@ -141,7 +141,7 @@ public abstract class AbstractCrud<T> extends Composite<Div> implements HasSize 
         return addListener(NewItemEvent.class, listener);
     }
 
-    public class NewItemEvent<T> extends ComponentEvent<AbstractCrud<T>> {
+    public static class NewItemEvent<T> extends ComponentEvent<AbstractCrud<T>> {
         private final T item;
 
         public NewItemEvent(AbstractCrud<T> source, boolean fromClient,
