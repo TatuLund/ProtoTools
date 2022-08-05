@@ -1,25 +1,11 @@
 package org.vaadin.addons.tatu;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.IntStream;
-
 import org.vaadin.addons.tatu.data.Car;
 import org.vaadin.addons.tatu.data.License;
 import org.vaadin.addons.tatu.data.Person;
-import org.vaadin.addons.tatu.prototools.Form;
-import org.vaadin.addons.tatu.prototools.Paging;
 import org.vaadin.addons.tatu.prototools.Wizard;
 
-import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.select.Select;
-import com.vaadin.flow.data.provider.DataProvider;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 

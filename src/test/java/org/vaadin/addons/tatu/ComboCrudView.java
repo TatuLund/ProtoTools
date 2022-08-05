@@ -1,11 +1,13 @@
 package org.vaadin.addons.tatu;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.vaadin.addons.tatu.data.Car;
 import org.vaadin.addons.tatu.data.License;
 import org.vaadin.addons.tatu.data.Person;
-import org.vaadin.addons.tatu.prototools.AutoGrid;
 import org.vaadin.addons.tatu.prototools.ComboCrud;
-import org.vaadin.addons.tatu.prototools.GridCrud;
 
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.router.PageTitle;
@@ -17,7 +19,9 @@ public class ComboCrudView extends Div {
 
     public ComboCrudView() {
         ComboCrud<Person> crud = new ComboCrud<>(Person.class, false);
-        crud.setItems(new Person(), new Person(), new Person());
+        List<Person> items = new ArrayList<Person>(
+                Arrays.asList(new Person(), new Person(), new Person()));
+        crud.setItems(items);
         // Show three properties in Grid
         crud.setComboProperties("firstName", "lastName", "weight");
         // Show all needed properties in the form

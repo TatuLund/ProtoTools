@@ -1,9 +1,12 @@
 package org.vaadin.addons.tatu;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.vaadin.addons.tatu.data.Car;
 import org.vaadin.addons.tatu.data.License;
 import org.vaadin.addons.tatu.data.Person;
-import org.vaadin.addons.tatu.prototools.GridCrud;
 import org.vaadin.addons.tatu.prototools.PopupCrud;
 
 import com.vaadin.flow.component.html.Div;
@@ -16,7 +19,9 @@ public class PopupCrudView extends Div {
 
     public PopupCrudView() {
         PopupCrud<Person> crud = new PopupCrud<>(Person.class, false);
-        crud.setItems(new Person(), new Person(), new Person());
+        List<Person> items = new ArrayList<Person>(
+                Arrays.asList(new Person(), new Person(), new Person()));
+        crud.setItems(items);
         crud.setFormProperties("firstName", "lastName", "gender", "weight",
                 "email", "dateOfBirth");
         crud.setGridProperties("firstName", "lastName", "gender");

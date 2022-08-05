@@ -9,7 +9,7 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.server.WebBrowser;
 
-@CssImport(value = "./dialog-mobile.css", themeFor="vaadin-dialog-overlay")
+@CssImport(value = "./dialog-mobile.css", themeFor = "vaadin-dialog-overlay")
 class PopupEdit extends Dialog {
 
     PopupEdit(String title, Component editor) {

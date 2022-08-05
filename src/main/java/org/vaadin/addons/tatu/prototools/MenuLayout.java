@@ -133,8 +133,8 @@ public class MenuLayout extends AppLayout {
     }
 
     private List<Component> createLinks() {
-        RouteRegistry reg = SessionRouteRegistry
-                .getSessionRegistry(VaadinSession.getCurrent());
+        VaadinSession session = VaadinSession.getCurrent();
+        RouteRegistry reg = SessionRouteRegistry.getSessionRegistry(session);
         List<RouteData> routes = reg.getRegisteredRoutes();
         List<Component> links = new ArrayList<>();
         routes.forEach(route -> {
@@ -170,8 +170,9 @@ public class MenuLayout extends AppLayout {
                     && !field.getValue().isBlank()) {
                 getUI().ifPresent(ui -> {
                     String full = path + "/" + field.getValue();
+                    VaadinSession session = VaadinSession.getCurrent();
                     RouteRegistry reg = SessionRouteRegistry
-                            .getSessionRegistry(VaadinSession.getCurrent());
+                            .getSessionRegistry(session);
                     Optional<Class<? extends Component>> target = reg
                             .getNavigationTarget(full);
                     if (target.isPresent()) {

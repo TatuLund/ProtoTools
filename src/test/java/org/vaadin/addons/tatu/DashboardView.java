@@ -3,13 +3,11 @@ package org.vaadin.addons.tatu;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 import org.vaadin.addons.tatu.GridLayout.Orientation;
 import org.vaadin.addons.tatu.prototools.Dashboard;
 import org.vaadin.addons.tatu.prototools.Dashboard.Widget;
 
-import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.charts.Chart;
 import com.vaadin.flow.component.charts.model.ChartType;
 import com.vaadin.flow.component.charts.model.Configuration;

@@ -1,6 +1,7 @@
 package org.vaadin.addons.tatu.prototools;
 
 import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.HasSize;
 import com.vaadin.flow.component.html.Div;
@@ -115,14 +116,20 @@ public abstract class AbstractCrud<T> extends Composite<Div>
         return layout;
     }
 
-    public Registration addItemRemoveHandler(
-            ComponentEventListener<ItemRemoveEvent> listener) {
-        return addListener(ItemRemoveEvent.class, listener);
+    public interface ItemRemoveListener<T>
+            extends ComponentEventListener<ItemRemoveEvent<T>> {
     }
 
-    public Registration addNewItemHandler(
-            ComponentEventListener<NewItemEvent> listener) {
-        return addListener(NewItemEvent.class, listener);
+    public Registration addItemRemoveHandler(ItemRemoveListener listener) {
+        return ComponentUtil.addListener(this, ItemRemoveEvent.class, listener);
+    }
+
+    public interface NewItemHandler<T>
+            extends ComponentEventListener<ItemRemoveEvent<T>> {
+    }
+
+    public Registration addNewItemHandler(NewItemHandler listener) {
+        return ComponentUtil.addListener(this, NewItemEvent.class, listener);
     }
 
 }

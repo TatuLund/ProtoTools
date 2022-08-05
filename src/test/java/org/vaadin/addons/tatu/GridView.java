@@ -1,13 +1,11 @@
 package org.vaadin.addons.tatu;
 
-
 import org.vaadin.addons.tatu.data.Car;
 import org.vaadin.addons.tatu.data.License;
 import org.vaadin.addons.tatu.data.Person;
 import org.vaadin.addons.tatu.prototools.AutoGrid;
 
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
